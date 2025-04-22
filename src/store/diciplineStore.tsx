@@ -1,17 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-
-interface Discipline {
-  id: string;
-  nome: string;
-  codigo: string;
-  cargaHoraria: string;
-  professor: string;
-  departamento: string;
-  periodo: string;
-  descricao?: string;
-  preRequisitos?: string[];
-}
+import { Discipline } from '../pages/calendarPage/calendarPage.type';
 
 interface DisciplineStore {
   disciplines: Discipline[];
@@ -23,19 +12,7 @@ interface DisciplineStore {
 export const useDisciplineStore = create<DisciplineStore>()(
   persist(
     (set) => ({
-      disciplines: [
-        {
-          id: '1',
-          nome: 'Matemática Avançada',
-          codigo: 'MAT101',
-          cargaHoraria: '60 horas',
-          professor: 'Dr. Carlos Silva',
-          departamento: 'Matemática',
-          periodo: '2023.1',
-          descricao: 'Cálculo diferencial e integral'
-        },
-        // Mais disciplinas podem ser adicionadas aqui
-      ],
+      disciplines: [], // Array vazio inicial
       
       addDiscipline: (discipline) => 
         set((state) => ({
@@ -58,8 +35,8 @@ export const useDisciplineStore = create<DisciplineStore>()(
         }))
     }),
     {
-      name: 'discipline-storage', // nome do item no local storage
-      storage: createJSONStorage(() => localStorage), // use o local storage
+      name: 'discipline-storage',
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

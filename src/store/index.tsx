@@ -3,3 +3,4 @@ export { useDisciplineStore } from './diciplineStore';
 export { useEnrollmentStore } from './enrollStore';
 export { useGradeStore } from './gradeStore';
 export { AuthStorage } from './loginStore';
+export { useCalendarStore } from './calendarStore';

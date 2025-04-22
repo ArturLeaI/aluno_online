@@ -73,11 +73,10 @@ const LoginPage: React.FC = () => {
     setErrors({ ...errors, cpf: !cpfValid });
     
     if (cpfValid) {
-      // Armazena COM formatação (pontos e traço)
       localStorage.setItem('userType', formData.userType);
-      localStorage.setItem('userCPF', formData.cpf); // Armazena formatado
+      localStorage.setItem('userCPF', formData.cpf);
       
-      window.location.href = '/';
+      window.location.href = '/alunos';
     }
   };
 

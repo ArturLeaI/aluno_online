@@ -23,7 +23,6 @@ const StudentPage: React.FC = () => {
   const [userType, setUserType] = useState<'aluno' | 'professor' | null>(null);
   const [userCPF, setUserCPF] = useState<string | null>(null);
 
-  // Carrega os dados do usuário do localStorage ao montar o componente
   useEffect(() => {
     const type = localStorage.getItem('userType');
     const cpf = localStorage.getItem('userCPF');
@@ -31,18 +30,15 @@ const StudentPage: React.FC = () => {
     setUserCPF(cpf);
   }, []);
 
-  // Encontra o aluno logado pelo CPF
   const loggedInStudent = userType === 'aluno' && userCPF
     ? students.find(student => student.cpf === userCPF)
     : null;
 
   const filteredStudents = students.filter(student => {
-    // Se for aluno, mostra apenas o próprio aluno
     if (userType === 'aluno') {
       return student.cpf === userCPF;
     }
 
-    // Se for professor, aplica os filtros normais
     const matchesSearch = student.nomeCompleto.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (student.cpf && student.cpf.toLowerCase().includes(searchTerm.toLowerCase()));
 
@@ -77,14 +73,11 @@ const StudentPage: React.FC = () => {
     setOpenEnrollmentModal(false);
     setSelectedStudent(null);
 
-    // Agora você tem acesso ao CPF se precisar
     if (data.studentCpf) {
       console.log('CPF do aluno matriculado:', data.studentCpf);
-      // Aqui você pode fazer algo com o CPF, como salvar no store
     }
   };
 
-  // Se for aluno e não encontrar o registro, mostra mensagem
   if (userType === 'aluno' && !loggedInStudent) {
     return (
       <Box sx={Styles.containerStyles}>

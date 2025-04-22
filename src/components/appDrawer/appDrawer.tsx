@@ -118,7 +118,7 @@ const AppDrawer: React.FC = () => {
     {
       text: 'Minhas Notas',
       icon: <GradeIcon />,
-      path: '/',
+      path: '/alunos',
       allowedRoles: ['aluno']
     },
     // Nova opção de Calendário

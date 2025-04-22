@@ -1,4 +1,3 @@
-// types.ts
 export type UserType = 'aluno' | 'professor';
 
 export interface UserData {
@@ -9,7 +8,6 @@ export interface UserData {
 export interface AlunoMatriculado {
   cpf: string;
   nome: string;
-  // outros campos do aluno se necessário
 }
 
 export interface Disciplina {
@@ -18,5 +16,4 @@ export interface Disciplina {
   codigo?: string;
   professor?: string;
   alunosMatriculados?: AlunoMatriculado[];
-  // outros campos da disciplina
 }

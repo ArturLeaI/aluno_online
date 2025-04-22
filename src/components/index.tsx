@@ -20,4 +20,11 @@ export { default  as ProfessoresTable } from './professorTable/professorTable';
 export { default  as DisciplineSearchHeader} from './diciplineSearchHeader/diciplineSearchHeader';
 export { default  as DisciplinesTable } from './disciplinesTable/disciplinesTable';
 export { default  as DisciplineDetailsModal } from './disciplineDetailsModal/disciplineDetailsModal';
+export { CalendarHeader } from './calendarComponents/calendarHeader/calendarHeader';
+export { MonthNavigator } from './calendarComponents/monthNavigator/monthNavigator';
+export { WeekDaysHeader } from './calendarComponents/weekDaysHeader/weekDaysHeader';
+export { CalendarGrid } from './calendarComponents/calendarGrid/calendarGrid';
+export { EventListDialog } from './calendarComponents/eventListDialog/eventListDialog';
+export { EventDialog } from './calendarComponents/eventDialog/eventDialog';
+export { NotificationSnackbar } from './calendarComponents/notificationSnackbar/notificationSnackbar';
 

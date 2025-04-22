@@ -1,82 +1,44 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-
-interface Event {
-  id: string;
-  date: string; // YYYY-MM-DD
-  title: string;
-  type: 'activity' | 'test' | 'presentation';
-  description: string;
-  notificationDaysBefore: number;
-  notified: boolean;
-}
-
-interface CalendarState {
-  events: Event[];
-  addEvent: (event: Omit<Event, 'id' | 'notified'>) => void;
-  updateEvent: (id: string, event: Partial<Event>) => void;
-  deleteEvent: (id: string) => void;
-  getEventsByDate: (date: string) => Event[];
-  checkNotifications: () => Event[];
-}
+import { persist } from 'zustand/middleware';
+import {CalendarState} from '../pages/calendarPage/calendarPage.type'
+type EventType = 'deadline' | 'test' | 'presentation';
 
 export const useCalendarStore = create<CalendarState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       events: [],
-      addEvent: (event) => {
-        const newEvent = {
-          ...event,
-          id: Date.now().toString(),
-          notified: false,
-        };
-        set((state) => ({ events: [...state.events, newEvent] }));
-      },
-      updateEvent: (id, updates) => {
-        set((state) => ({
-          events: state.events.map((event) =>
-            event.id === id ? { ...event, ...updates } : event
-          ),
-        }));
-      },
-      deleteEvent: (id) => {
-        set((state) => ({
-          events: state.events.filter((event) => event.id !== id),
-        }));
-      },
-      getEventsByDate: (date) => {
-        return get().events.filter((event) => event.date === date);
-      },
-      checkNotifications: () => {
-        const today = new Date();
-        const eventsToNotify = get().events.filter((event) => {
-          if (event.notified) return false;
-          
-          const eventDate = new Date(event.date);
-          const diffInDays = Math.floor(
-            (eventDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-          );
-          
-          return diffInDays <= event.notificationDaysBefore;
-        });
-
-        // Marcar eventos como notificados
-        if (eventsToNotify.length > 0) {
-          set((state) => ({
-            events: state.events.map((event) =>
-              eventsToNotify.some((e) => e.id === event.id)
-                ? { ...event, notified: true }
-                : event
-            ),
-          }));
-        }
-
-        return eventsToNotify;
-      },
+      addEvent: (event) => set((state) => ({ events: [...state.events, event] })),
+      updateEvent: (id, updates) => set((state) => ({
+        events: state.events.map((event) => 
+          event.id === id ? { ...event, ...updates } : event
+        )
+      })),
+      deleteEvent: (id) => set((state) => ({
+        events: state.events.filter((event) => event.id !== id)
+      })),
+      markAsNotified: (id) => set((state) => ({
+        events: state.events.map((event) => 
+          event.id === id ? { ...event, notified: true } : event
+        )
+      })),
     }),
     {
-      name: 'calendar-storage',
-      storage: createJSONStorage(() => localStorage),
+      name: 'school-calendar-storage',
+      storage: {
+        getItem: (name) => Promise.resolve(
+          localStorage.getItem(name) ? JSON.parse(localStorage.getItem(name)!) : null
+        ),
+        setItem: (name, value) => {
+          localStorage.setItem(name, JSON.stringify(value));
+          return Promise.resolve();
+        },
+        removeItem: (name) => {
+          localStorage.removeItem(name);
+          return Promise.resolve();
+        },
+      },
     }
   )
 );
+
+export type { EventType };
