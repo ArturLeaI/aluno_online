@@ -11,7 +11,7 @@ import GenericModal from '../genericModal/genericModal';
 interface Student {
   id: string;
   nomeCompleto: string;
-  cpf: string; // Adicione esta linha
+  cpf: string; 
 }
 
 interface Discipline {
@@ -33,7 +33,7 @@ interface EnrollmentModalProps {
   disciplines: Discipline[];
   enrollments: Enrollment[];
   onClose: () => void;
-  onEnroll: (data: { disciplinesIds: string[]; studentCpf: string }) => void; // Modificado
+  onEnroll: (data: { disciplinesIds: string[]; studentCpf: string }) => void;
   readOnly?: boolean;
 }
 
@@ -44,12 +44,12 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
   enrollments,
   onClose,
   onEnroll,
-  readOnly = false // Valor padrão false
+  readOnly = false
 }) => {
   const [selectedDisciplines, setSelectedDisciplines] = useState<string[]>([]);
 
   const handleDisciplineSelect = (disciplineId: string) => {
-    if (readOnly) return; // Não faz nada se for modo leitura
+    if (readOnly) return;
     setSelectedDisciplines(prev =>
       prev.includes(disciplineId)
         ? prev.filter(id => id !== disciplineId)
@@ -62,7 +62,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
     
     onEnroll({
       disciplinesIds: selectedDisciplines,
-      studentCpf: student.cpf // Envia o CPF junto
+      studentCpf: student.cpf
     });
     setSelectedDisciplines([]);
   };

@@ -1,4 +1,3 @@
-// types/gradeTypes.ts
 export interface GradeInput {
     studentId: string;
     p1: number | null;

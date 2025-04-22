@@ -1,19 +1,19 @@
 import React from 'react';
-import { 
-  Dialog, 
-  DialogTitle, 
-  DialogContent, 
-  DialogActions, 
-  Button, 
-  List, 
-  ListItem, 
-  ListItemText, 
-  Divider, 
-  IconButton, 
-  Box, 
-  Typography 
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  IconButton,
+  Box,
+  Typography
 } from '@mui/material';
-import { Edit, Delete, Close, Event as EventIcon } from '@mui/icons-material';
+import {  Delete, Close, Event as EventIcon } from '@mui/icons-material';
 import { DateTime } from 'luxon';
 import { SchoolEvent } from '../../../pages/calendarPage/calendarPage.type';
 
@@ -24,9 +24,9 @@ interface EventListDialogProps {
   events: SchoolEvent[];
   getEventColor: (type: string) => string;
   isProfessor: boolean;
-  onEditEvent?: (event: SchoolEvent) => void; // Opcional
+  onEditEvent?: (event: SchoolEvent) => void;
   onDeleteEvent?: (id: string) => void;
-  
+
 }
 
 export const EventListDialog: React.FC<EventListDialogProps> = ({
@@ -36,14 +36,18 @@ export const EventListDialog: React.FC<EventListDialogProps> = ({
   events,
   getEventColor,
   isProfessor,
-  onEditEvent,
   onDeleteEvent,
 }) => {
-  const filteredEvents = selectedDate 
-    ? events.filter(event => 
-        DateTime.fromISO(event.date).hasSame(selectedDate, 'day'))
+  const filteredEvents = selectedDate
+    ? events.filter(event =>
+      DateTime.fromISO(event.date).hasSame(selectedDate, 'day'))
     : [];
-
+  
+    const handleDelete = (id: string) => {
+      if (isProfessor && onDeleteEvent) {
+        onDeleteEvent(id);
+      }
+    };
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
@@ -60,12 +64,14 @@ export const EventListDialog: React.FC<EventListDialogProps> = ({
             {filteredEvents.map((event) => (
               <React.Fragment key={event.id}>
                 <ListItem secondaryAction={
-                  isProfessor && onEditEvent && onDeleteEvent && (
+                  isProfessor && (
                     <Box>
-                      <IconButton edge="end" aria-label="edit" onClick={() => onEditEvent(event)}>
-                        <Edit />
-                      </IconButton>
-                      <IconButton edge="end" aria-label="delete" onClick={() => onDeleteEvent(event.id)}>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleDelete(event.id)}
+                        color="error"
+                      >
                         <Delete />
                       </IconButton>
                     </Box>

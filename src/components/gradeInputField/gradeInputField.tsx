@@ -1,4 +1,3 @@
-// components/GradeInputField/GradeInputField.tsx
 import { TextField } from '@mui/material';
 
 interface GradeInputFieldProps {

@@ -50,7 +50,7 @@ interface StudentDetailsModalProps {
   disciplines: Discipline[];
   onClose: () => void;
   onEnroll: () => void;
-  isProfessor?: boolean; // Adicionei esta propriedade
+  isProfessor?: boolean; 
 }
 
 const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({
@@ -60,7 +60,7 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({
   disciplines,
   onClose,
   onEnroll,
-  isProfessor = false // Valor padrão false
+  isProfessor = false
 }) => {
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -123,7 +123,7 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Histórico de Matrículas
             </Typography>
-            {isProfessor && ( // Só mostra o botão se for professor
+            {isProfessor && (
               <Button
                 variant="outlined"
                 size="small"

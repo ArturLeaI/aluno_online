@@ -7,12 +7,12 @@ export interface UserData {
 
 export interface AlunoMatriculado {
   cpf: string;
-  nome: string;
+  name: string;
 }
 
 export interface Disciplina {
   id: string;
-  nome: string;
+  name: string;
   codigo?: string;
   professor?: string;
   alunosMatriculados?: AlunoMatriculado[];

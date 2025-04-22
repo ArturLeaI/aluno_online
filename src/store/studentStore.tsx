@@ -20,8 +20,6 @@ type Student = {
 type StudentStore = {
   students: Student[];
   addStudent: (student: Student) => void;
-  clearStudents: () => void;
-  removeStudent: (index: number) => void;
 };
 
 export const useStudentStore = create<StudentStore>()(
@@ -30,15 +28,10 @@ export const useStudentStore = create<StudentStore>()(
       students: [],
       addStudent: (student) => 
         set((state) => ({ students: [...state.students, student] })),
-      clearStudents: () => set({ students: [] }),
-      removeStudent: (index) => 
-        set((state) => ({ 
-          students: state.students.filter((_, i) => i !== index) 
-        })),
     }),
     {
-      name: 'student-storage', // Nome da chave no localStorage
-      storage: createJSONStorage(() => localStorage), // Forma correta de especificar o storage
+      name: 'student-storage',
+      storage: createJSONStorage(() => localStorage), 
     }
   )
 );

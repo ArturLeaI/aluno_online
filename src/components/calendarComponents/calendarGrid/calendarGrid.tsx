@@ -79,8 +79,8 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                         dayObj={dayObj}
                         getEventsForDay={getEventsForDay}
                         getEventColor={getEventColor}
-                        isProfessor={isProfessor} // Apenas para informação visual
-                        onDateClick={onDateClick} // Fundamental - deve ser passado sempre
+                        isProfessor={isProfessor} 
+                        onDateClick={onDateClick}
                     />
                 </Box>
             ))}

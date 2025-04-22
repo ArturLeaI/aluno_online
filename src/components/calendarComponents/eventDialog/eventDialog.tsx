@@ -8,14 +8,10 @@ import {
   TextField, 
   MenuItem,
   Typography,
-  CircularProgress
 } from '@mui/material';
 import { DateTime } from 'luxon';
-
-interface Discipline {
-    id: string;
-    name: string;
-}
+import { Discipline } from '../../../pages/calendarPage/calendarPage.type';
+import { useCalendarStore } from '../../../store/calendarStore';
 
 interface EventDialogProps {
     open: boolean;
@@ -36,13 +32,9 @@ export const EventDialog: React.FC<EventDialogProps> = ({
         description: ''
     });
 
-    const [isLoading, setIsLoading] = useState(true);
-
-    // Atualiza o estado quando o dialog abre ou quando disciplinas mudam
+    const addEvent = useCalendarStore((state) => state.addEvent);
     useEffect(() => {
         if (open) {
-            console.log('Disciplinas recebidas:', disciplines); // Debug
-            setIsLoading(false);
             
             setEvent(prev => ({
                 ...prev,
@@ -51,24 +43,19 @@ export const EventDialog: React.FC<EventDialogProps> = ({
             }));
         }
     }, [open, disciplines]);
-
+    
+    
     const handleSubmit = () => {
-        console.log('Evento submetido:', event); // Debug
+    
+        const newEvent = {
+            ...event,
+            id: Date.now().toString(),
+            notified: false,
+        };
+    
+        addEvent(newEvent);
         onClose();
     };
-
-    if (isLoading) {
-        return (
-            <Dialog open={open} onClose={onClose}>
-                <DialogContent sx={{ textAlign: 'center', p: 3 }}>
-                    <CircularProgress />
-                    <Typography variant="body1" sx={{ mt: 2 }}>
-                        Carregando disciplinas...
-                    </Typography>
-                </DialogContent>
-            </Dialog>
-        );
-    }
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
@@ -109,9 +96,9 @@ export const EventDialog: React.FC<EventDialogProps> = ({
                     onChange={(e) => setEvent({ ...event, type: e.target.value as any })}
                     sx={{ mb: 2 }}
                 >
-                    <MenuItem value="deadline">Prazo</MenuItem>
-                    <MenuItem value="test">Prova</MenuItem>
-                    <MenuItem value="presentation">Apresentação</MenuItem>
+                    <MenuItem value="Relatorio">Relatorio</MenuItem>
+                    <MenuItem value="Prova">Prova</MenuItem>
+                    <MenuItem value="Apresentação">Apresentação</MenuItem>
                 </TextField>
                 
                 <TextField
@@ -148,6 +135,7 @@ export const EventDialog: React.FC<EventDialogProps> = ({
                     color="primary"
                     variant="contained"
                     disabled={disciplines.length === 0}
+                    
                 >
                     Salvar Evento
                 </Button>

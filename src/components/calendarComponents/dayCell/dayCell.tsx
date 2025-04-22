@@ -39,7 +39,7 @@ export const DayCell: React.FC<DayCellProps> = ({
                         : 'background.paper'
                     : 'action.disabledBackground',
                 border: isToday ? (theme) => `2px solid ${theme.palette.primary.main}` : 'none',
-                cursor: 'pointer', // Garante cursor pointer para todos
+                cursor: 'pointer', 
                 display: 'flex',
                 flexDirection: 'column',
                 opacity: isProfessor ? 1 : 0.9,
@@ -48,7 +48,7 @@ export const DayCell: React.FC<DayCellProps> = ({
                     boxShadow: 1
                 }
             }}
-            onClick={handleClick} // Sempre clicável
+            onClick={handleClick}
         >
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography

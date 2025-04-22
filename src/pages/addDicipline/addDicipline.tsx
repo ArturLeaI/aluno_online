@@ -21,7 +21,7 @@ import {
   import { useDisciplineStore } from '../../store/diciplineStore';
   
   type FormData = {
-    nome: string;
+    name: string;
     codigo: string;
     cargaHoraria: string;
     professor: string;
@@ -36,7 +36,7 @@ import {
     const navigate = useNavigate();
     const { control, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
       defaultValues: {
-        nome: '',
+        name: '',
         codigo: '',
         cargaHoraria: '',
         professor: '',
@@ -91,14 +91,14 @@ import {
           <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={formStyles}>
             <Box sx={fieldsContainerStyles}>
               <Controller
-                name="nome"
+                name="name"
                 control={control}
                 rules={{ required: 'Nome da disciplina é obrigatório' }}
                 render={({ field }) => (
                   <GenericTextField
                     label="Nome da Disciplina"
-                    error={!!errors.nome}
-                    helperText={errors.nome?.message}
+                    error={!!errors.name}
+                    helperText={errors.name?.message}
                     {...field}
                   />
                 )}

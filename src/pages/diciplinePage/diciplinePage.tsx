@@ -13,7 +13,7 @@ const DisciplinePage: React.FC = () => {
 
   const filteredDisciplines = disciplines.filter(discipline => {
     return (
-      discipline.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      discipline.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (discipline.codigo && discipline.codigo.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (discipline.professor && discipline.professor.toLowerCase().includes(searchTerm.toLowerCase()))
     );

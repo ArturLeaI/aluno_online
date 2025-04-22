@@ -22,7 +22,7 @@ import {
   School as SchoolIcon,
   ExitToApp as ExitToAppIcon,
   Grade as GradeIcon,
-  Event as CalendarIcon // Novo ícone para o calendário
+  Event as CalendarIcon 
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
@@ -121,16 +121,15 @@ const AppDrawer: React.FC = () => {
       path: '/alunos',
       allowedRoles: ['aluno']
     },
-    // Nova opção de Calendário
+    
     {
       text: 'Calendário',
       icon: <CalendarIcon />,
       path: '/calendario',
-      allowedRoles: ['aluno', 'professor'] // Disponível para ambos os tipos de usuário
+      allowedRoles: ['aluno', 'professor'] 
     },
   ];
 
-  // Filtra os itens baseado no tipo de usuário
   const menuItems = baseMenuItems
     .filter(item => userType && item.allowedRoles.includes(userType))
     .sort((a, b) => a.text.localeCompare(b.text));

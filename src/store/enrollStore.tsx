@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware'; // Importe createJSONStorage
+import { persist, createJSONStorage } from 'zustand/middleware'; 
 
 interface Enrollment {
   id: string;
@@ -14,8 +14,6 @@ interface Enrollment {
 interface EnrollmentStore {
   enrollments: Enrollment[];
   addEnrollment: (enrollment: Omit<Enrollment, 'id'>) => void;
-  updateEnrollment: (id: string, updatedData: Partial<Enrollment>) => void;
-  cancelEnrollment: (id: string) => void;
   getEnrollmentsByStudent: (alunoId: string) => Enrollment[];
   getEnrollmentsByDiscipline: (disciplinaId: string) => Enrollment[];
 }
@@ -50,24 +48,12 @@ export const useEnrollmentStore = create<EnrollmentStore>()(
         }
         const newEnrollment = {
           ...enrollment,
-          id: crypto.randomUUID(), // ID único
+          id: crypto.randomUUID(),
         };
         set(state => ({
           enrollments: [...state.enrollments, newEnrollment],
         }));
       },
-        
-      updateEnrollment: (id, updatedData) =>
-        set((state) => ({
-          enrollments: state.enrollments.map((enrollment) =>
-            enrollment.id === id ? { ...enrollment, ...updatedData } : enrollment
-          )
-        })),
-        
-      cancelEnrollment: (id) =>
-        set((state) => ({
-          enrollments: state.enrollments.filter((enrollment) => enrollment.id !== id)
-        })),
         
       getEnrollmentsByStudent: (alunoId) => {
         return get().enrollments.filter(enrollment => enrollment.alunoId === alunoId);
@@ -78,8 +64,8 @@ export const useEnrollmentStore = create<EnrollmentStore>()(
       }
     }),
     {
-      name: 'enrollment-storage', // nome do item no local storage
-      storage: createJSONStorage(() => localStorage), // use o local storage
+      name: 'enrollment-storage',
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

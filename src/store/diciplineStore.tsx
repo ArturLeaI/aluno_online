@@ -5,14 +5,12 @@ import { Discipline } from '../pages/calendarPage/calendarPage.type';
 interface DisciplineStore {
   disciplines: Discipline[];
   addDiscipline: (discipline: Omit<Discipline, 'id'>) => void;
-  updateDiscipline: (id: string, updatedData: Partial<Discipline>) => void;
-  removeDiscipline: (id: string) => void;
 }
 
 export const useDisciplineStore = create<DisciplineStore>()(
   persist(
     (set) => ({
-      disciplines: [], // Array vazio inicial
+      disciplines: [],
       
       addDiscipline: (discipline) => 
         set((state) => ({
@@ -21,18 +19,6 @@ export const useDisciplineStore = create<DisciplineStore>()(
             { ...discipline, id: Date.now().toString() }
           ]
         })),
-        
-      updateDiscipline: (id, updatedData) =>
-        set((state) => ({
-          disciplines: state.disciplines.map((discipline) =>
-            discipline.id === id ? { ...discipline, ...updatedData } : discipline
-          )
-        })),
-        
-      removeDiscipline: (id) =>
-        set((state) => ({
-          disciplines: state.disciplines.filter((discipline) => discipline.id !== id)
-        }))
     }),
     {
       name: 'discipline-storage',

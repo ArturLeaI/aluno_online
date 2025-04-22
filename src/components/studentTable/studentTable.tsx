@@ -34,7 +34,7 @@ interface StudentTableProps {
   onEnroll: (student: Student) => void;
   onViewGrades: (student: Student) => void;
   hideActions?: boolean;
-  showViewActions?: boolean; // Nova propriedade
+  showViewActions?: boolean; 
 }
 
 const StudentTable: React.FC<StudentTableProps> = ({
@@ -57,7 +57,6 @@ const StudentTable: React.FC<StudentTableProps> = ({
     );
   };
 
-  // Calcula o colspan dinamicamente
   const colSpan = hideActions && !showViewActions ? 4 : 5;
 
   return (

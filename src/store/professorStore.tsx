@@ -20,8 +20,6 @@ type Professor = {
 type ProfessorStore = {
   professores: Professor[];
   adicionarProfessor: (professor: Professor) => void;
-  limparProfessores: () => void;
-  removerProfessor: (index: number) => void;
 };
 
 export const useProfessorStore = create<ProfessorStore>()(
@@ -32,14 +30,7 @@ export const useProfessorStore = create<ProfessorStore>()(
       adicionarProfessor: (professor) => 
         set((state) => ({ 
           professores: [...state.professores, professor] 
-        })),
-      
-      limparProfessores: () => set({ professores: [] }),
-      
-      removerProfessor: (index) => 
-        set((state) => ({ 
-          professores: state.professores.filter((_, i) => i !== index) 
-        })),
+        })),      
     }),
     {
       name: 'professor-storage',

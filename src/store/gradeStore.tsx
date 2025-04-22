@@ -1,10 +1,9 @@
-// src/store/gradeStore.ts
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface Grade {
   id: string;
-  enrollmentId: string; // Referência à matrícula
+  enrollmentId: string;
   p1: number | null;
   exercises: number | null;
   report: number | null;
@@ -17,8 +16,6 @@ interface GradeStore {
   getGradesByEnrollment: (enrollmentId: string) => Grade | undefined;
   getGradesByDiscipline: (disciplineId: string) => Grade[];
   saveGrade: (grade: Omit<Grade, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  updateGrade: (id: string, updatedData: Partial<Grade>) => void;
-  clearGrades: () => void; // Nova função para limpar dados
 }
 
 export const useGradeStore = create<GradeStore>()(
@@ -31,8 +28,6 @@ export const useGradeStore = create<GradeStore>()(
       },
       
       getGradesByDiscipline: (disciplineId) => {
-        // Implementação temporária que retorna todas as notas
-        // Você precisará integrar com o store de matrículas para filtrar por disciplina
         console.log(`Filtrando notas por disciplina: ${disciplineId}`);
         return get().grades;
       },
@@ -47,24 +42,11 @@ export const useGradeStore = create<GradeStore>()(
         set((state) => ({ grades: [...state.grades, newGrade] }));
       },
       
-      updateGrade: (id, updatedData) => {
-        set((state) => ({
-          grades: state.grades.map(grade =>
-            grade.id === id
-              ? { ...grade, ...updatedData, updatedAt: new Date().toISOString() }
-              : grade
-          )
-        }));
-      },
-      
-      clearGrades: () => {
-        set({ grades: [] });
-      }
     }),
     {
-      name: 'grade-storage', // Nome único para o localStorage
-      storage: createJSONStorage(() => localStorage), // Usando localStorage
-      partialize: (state) => ({ grades: state.grades }), // Define quais partes do estado serão persistidas
+      name: 'grade-storage',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({ grades: state.grades }),
     }
   )
 );

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Box } from '@mui/material';
 import { DateTime } from 'luxon';
 import { useUserType } from '../../hooks/useUserType';
@@ -10,28 +10,21 @@ const SchoolCalendar: React.FC = () => {
   const userType = useUserType();
   const isProfessor = userType === 'professor';
   const { disciplines } = useDisciplineStore();
-  const { events } = useCalendarStore();
+  const { events, addEvent, updateEvent, deleteEvent } = useCalendarStore();
 
   const [currentMonth, setCurrentMonth] = useState(DateTime.now());
   const [selectedDate, setSelectedDate] = useState<DateTime | null>(null);
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false);
-
-  // Debug: verifica disciplinas carregadas
-  useEffect(() => {
-    console.log('Disciplinas no store:', disciplines);
-    console.log('Disciplinas no localStorage:', localStorage.getItem('discipline-storage'));
-  }, [disciplines]);
+  const [currentEvent, setCurrentEvent] = useState<SchoolEvent | null>(null);
 
   const handlePrevMonth = () => setCurrentMonth(currentMonth.minus({ months: 1 }));
   const handleNextMonth = () => setCurrentMonth(currentMonth.plus({ months: 1 }));
 
   const handleDateClick = (date: DateTime) => {
-    console.log('Clique detectado - Tipo de usuário:', userType);
     setSelectedDate(date);
   };
 
   const handleAddEvent = () => {
-    console.log('Disciplinas disponíveis ao abrir dialog:', disciplines);
     setIsEventDialogOpen(true);
   };
 
@@ -43,13 +36,12 @@ const SchoolCalendar: React.FC = () => {
     }[type] || '#2196f3';
   }, []);
 
-  const handleEditEvent = useCallback((event: SchoolEvent) => {
-    console.log('Editar evento:', event);
-  }, []);
-
   const handleDeleteEvent = useCallback((id: string) => {
-    console.log('Excluir evento com id:', id);
-  }, []);
+    if (window.confirm('Tem certeza que deseja excluir este evento?')) {
+      deleteEvent(id);
+    }
+  }, [deleteEvent]);
+  
 
   return (
     <Box sx={{ p: 2 }}>
@@ -77,14 +69,9 @@ const SchoolCalendar: React.FC = () => {
         open={!!selectedDate}
         selectedDate={selectedDate}
         onClose={() => setSelectedDate(null)}
-        events={events.filter(event =>
-          selectedDate ?
-            DateTime.fromISO(event.date).hasSame(selectedDate, 'day') :
-            false
-        )}
+        events={events}
         getEventColor={getEventColor}
         isProfessor={isProfessor}
-        onEditEvent={isProfessor ? handleEditEvent : undefined}
         onDeleteEvent={isProfessor ? handleDeleteEvent : undefined}
       />
 
