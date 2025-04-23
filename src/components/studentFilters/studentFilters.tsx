@@ -18,7 +18,7 @@ import {
 
 interface Discipline {
   id: string;
-  nome: string;
+  name: string;
 }
 
 interface StudentFiltersProps {
@@ -79,7 +79,7 @@ const StudentFilters: React.FC<StudentFiltersProps> = ({
                 </MenuItem>
                 {disciplines.map(discipline => (
                   <MenuItem key={discipline.id} value={discipline.id}>
-                    {discipline.nome}
+                    {discipline.name}
                   </MenuItem>
                 ))}
               </Select>

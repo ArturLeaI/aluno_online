@@ -16,7 +16,7 @@ interface Student {
 
 interface Discipline {
   id: string;
-  nome: string;
+  name: string;
   codigo: string;
   professor: string;
 }
@@ -110,7 +110,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
               >
                 <Box display="flex" alignItems="center">
                   <Typography fontWeight="medium" sx={{ flexGrow: 1 }}>
-                    {discipline.nome}
+                    {discipline.name}
                   </Typography>
                   {isEnrolled && (
                     <Chip
@@ -136,11 +136,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {selectedDisciplines.map(id => {
-                const discipline = disciplines.find(d => d.id === id) || { nome: 'Desconhecida' };
+                const discipline = disciplines.find(d => d.id === id) || { name: 'Desconhecida' };
                 return (
                   <Chip
                     key={id}
-                    label={discipline.nome}
+                    label={discipline.name}
                     onDelete={() => handleDisciplineSelect(id)}
                     color="primary"
                   />

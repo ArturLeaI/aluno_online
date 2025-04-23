@@ -1,71 +1,41 @@
 import React from 'react';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
-  IconButton,
-  Box,
-  Typography
-} from '@mui/material';
-import {  Delete, Close, Event as EventIcon } from '@mui/icons-material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, List, ListItem, ListItemText, Divider, IconButton, Box, Typography } from '@mui/material';
+import { Delete, Close, Event as EventIcon } from '@mui/icons-material';
 import { DateTime } from 'luxon';
-import { SchoolEvent } from '../../../pages/calendarPage/calendarPage.type';
-
-interface EventListDialogProps {
-  open: boolean;
-  selectedDate: DateTime | null;
-  onClose: () => void;
-  events: SchoolEvent[];
-  getEventColor: (type: string) => string;
-  isProfessor: boolean;
-  onEditEvent?: (event: SchoolEvent) => void;
-  onDeleteEvent?: (id: string) => void;
-
-}
+import { EventListDialogProps } from './eventListDialog.type';
+import { closeButtonStyles, eventHeaderStyles, eventIconStyles, dialogActionsStyles, emptyStateStyles, secondaryActionStyles } from './eventListDialog.style';
 
 export const EventListDialog: React.FC<EventListDialogProps> = ({
-  open,
-  onClose,
-  selectedDate,
-  events,
-  getEventColor,
-  isProfessor,
-  onDeleteEvent,
-}) => {
+  open, onClose, selectedDate, events, getEventColor, isProfessor, onDeleteEvent }) => {
   const filteredEvents = selectedDate
     ? events.filter(event =>
-      DateTime.fromISO(event.date).hasSame(selectedDate, 'day'))
+        DateTime.fromISO(event.date).hasSame(selectedDate, 'day'))
     : [];
   
-    const handleDelete = (id: string) => {
-      if (isProfessor && onDeleteEvent) {
-        onDeleteEvent(id);
-      }
-    };
+  const handleDelete = (id: string) => {
+    if (isProfessor && onDeleteEvent) {
+      onDeleteEvent(id);
+    }
+  };
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
         Eventos para {selectedDate?.toFormat('dd/MM/yyyy')}
-        <IconButton onClick={onClose} sx={{ position: 'absolute', right: 8, top: 8 }}>
+        <IconButton onClick={onClose} sx={closeButtonStyles}>
           <Close />
         </IconButton>
       </DialogTitle>
       <DialogContent>
         {filteredEvents.length === 0 ? (
-          <Typography>Nenhum evento agendado para este dia.</Typography>
+          <Typography sx={emptyStateStyles}>Nenhum evento agendado para este dia.</Typography>
         ) : (
           <List>
             {filteredEvents.map((event) => (
               <React.Fragment key={event.id}>
                 <ListItem secondaryAction={
                   isProfessor && (
-                    <Box>
+                    <Box sx={secondaryActionStyles}>
                       <IconButton
                         edge="end"
                         aria-label="delete"
@@ -79,8 +49,8 @@ export const EventListDialog: React.FC<EventListDialogProps> = ({
                 }>
                   <ListItemText
                     primary={
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <EventIcon sx={{ color: getEventColor(event.type), mr: 1 }} />
+                      <Box sx={eventHeaderStyles}>
+                        <EventIcon sx={eventIconStyles(getEventColor(event.type))} />
                         <Typography fontWeight="bold">{event.title}</Typography>
                       </Box>
                     }
@@ -98,7 +68,7 @@ export const EventListDialog: React.FC<EventListDialogProps> = ({
           </List>
         )}
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={dialogActionsStyles}>
         <Button onClick={onClose}>Fechar</Button>
       </DialogActions>
     </Dialog>

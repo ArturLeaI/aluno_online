@@ -1,12 +1,7 @@
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
-import { DateTime } from 'luxon';
-
-interface MonthNavigatorProps {
-  currentMonth: DateTime;
-  onPrevMonth: () => void;
-  onNextMonth: () => void;
-}
+import { MonthNavigatorProps } from './monthNavigator.type';
+import { containerStyles, monthTitleStyles } from './monthNavigator.style';
 
 export const MonthNavigator: React.FC<MonthNavigatorProps> = ({ 
   currentMonth, 
@@ -14,9 +9,9 @@ export const MonthNavigator: React.FC<MonthNavigatorProps> = ({
   onNextMonth 
 }) => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+    <Box sx={containerStyles}>
       <Button onClick={onPrevMonth}>&lt; Mês Anterior</Button>
-      <Typography variant="h5" component="h2">
+      <Typography sx={monthTitleStyles}>
         {currentMonth.toFormat('MMMM yyyy')}
       </Typography>
       <Button onClick={onNextMonth}>Próximo Mês &gt;</Button>

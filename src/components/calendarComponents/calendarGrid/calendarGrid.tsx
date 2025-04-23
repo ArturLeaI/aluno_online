@@ -2,14 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Box } from '@mui/material';
 import { DateTime } from 'luxon';
 import { DayCell } from '../dayCell/dayCell';
-import { SchoolEvent } from '../../../pages/calendarPage/calendarPage.type';
-
-interface CalendarGridProps {
-    currentMonth: DateTime;
-    events: SchoolEvent[];
-    isProfessor: boolean;
-    onDateClick: (date: DateTime) => void;
-}
+import { CalendarGridProps } from './calendarGrid.type';
 
 export const CalendarGrid: React.FC<CalendarGridProps> = ({
     currentMonth,

@@ -1,10 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-
-interface DetailItemProps {
-  label: string;
-  value: string;
-}
+import { DetailItemProps } from './detailItem.type';
 
 const DetailItem: React.FC<DetailItemProps> = ({ label, value }) => (
   <Box sx={{ mb: 1.5 }}>

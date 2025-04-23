@@ -2,15 +2,8 @@ import React from 'react';
 import { Paper, Box, Typography, Badge } from '@mui/material';
 import { Notifications } from '@mui/icons-material';
 import { DateTime } from 'luxon';
-import { DayObject, SchoolEvent, EventType } from '../../../pages/calendarPage/calendarPage.type';
-
-interface DayCellProps {
-    dayObj: DayObject;
-    getEventsForDay: (date: DateTime) => SchoolEvent[];
-    getEventColor: (type: EventType) => string;
-    isProfessor: boolean;
-    onDateClick: (date: DateTime) => void;
-}
+import { DayCellProps } from './dayCell.type';
+import { paperStyles, dayNumberStyles, eventItemStyles, headerBoxStyles, eventsBoxStyles, badgeStyles } from './dayCell.style';
 
 export const DayCell: React.FC<DayCellProps> = ({
     dayObj,
@@ -29,35 +22,11 @@ export const DayCell: React.FC<DayCellProps> = ({
     return (
         <Paper
             elevation={isToday ? 3 : 0}
-            sx={{
-                p: 1,
-                height: '100%',
-                flexGrow: 1,
-                backgroundColor: dayObj.currentMonth
-                    ? isToday
-                        ? 'action.selected'
-                        : 'background.paper'
-                    : 'action.disabledBackground',
-                border: isToday ? (theme) => `2px solid ${theme.palette.primary.main}` : 'none',
-                cursor: 'pointer', 
-                display: 'flex',
-                flexDirection: 'column',
-                opacity: isProfessor ? 1 : 0.9,
-                '&:hover': {
-                    border: (theme) => `1px solid ${theme.palette.divider}`,
-                    boxShadow: 1
-                }
-            }}
+            sx={paperStyles(isToday, dayObj.currentMonth, isProfessor)}
             onClick={handleClick}
         >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography
-                    variant="body2"
-                    sx={{
-                        fontWeight: isToday ? 'bold' : 'normal',
-                        color: dayObj.currentMonth ? 'text.primary' : 'text.secondary',
-                    }}
-                >
+            <Box sx={headerBoxStyles}>
+                <Typography variant="body2" sx={dayNumberStyles(isToday, dayObj.currentMonth)}>
                     {dayObj.day}
                 </Typography>
                 {dayEvents.length > 0 && (
@@ -65,21 +34,11 @@ export const DayCell: React.FC<DayCellProps> = ({
                 )}
             </Box>
 
-            <Box sx={{ marginTop: 1, flexGrow: 1 }}>
+            <Box sx={eventsBoxStyles}>
                 {dayEvents.slice(0, 2).map((event) => (
                     <Box
                         key={event.id}
-                        sx={{
-                            backgroundColor: getEventColor(event.type),
-                            color: 'white',
-                            borderRadius: 1,
-                            padding: 0.5,
-                            marginBottom: 0.5,
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            fontSize: '0.7rem',
-                        }}
+                        sx={eventItemStyles(getEventColor(event.type))}
                     >
                         {event.title}
                     </Box>
@@ -88,7 +47,7 @@ export const DayCell: React.FC<DayCellProps> = ({
                     <Badge
                         badgeContent={`+${dayEvents.length - 2}`}
                         color="primary"
-                        sx={{ marginTop: 1 }}
+                        sx={badgeStyles}
                     />
                 )}
             </Box>

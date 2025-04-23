@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Snackbar, Alert } from '@mui/material';
 import { DateTime } from 'luxon';
-import { SchoolEvent } from '../../../pages/calendarPage/calendarPage.type';
 import { useCalendarStore } from '../../../store/calendarStore';
-
-interface NotificationSnackbarProps {
-  events: SchoolEvent[];
-}
+import { NotificationSnackbarProps, NotificationState } from './notificationSnackbar.type';
 
 export const NotificationSnackbar: React.FC<NotificationSnackbarProps> = ({ events }) => {
-  const [notification, setNotification] = useState<{
-    open: boolean, 
-    message: string, 
-    severity: 'success' | 'error' | 'info' | 'warning'
-  } | null>(null);
+  const [notification, setNotification] = useState<NotificationState | null>(null);
   const { markAsNotified } = useCalendarStore();
 
   useEffect(() => {

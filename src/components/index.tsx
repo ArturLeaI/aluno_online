@@ -1,6 +1,5 @@
 export { default  as AddButton } from './addButtonStudent/addButtonStudent';
 export { default  as AppDrawer} from './appDrawer/appDrawer';
-export { default  as CardDefault} from './cardDefault/cardDefault';
 export { default  as DetailItem} from './detailItem/detailItem';
 export { default  as DisciplineList} from './disciplineList/disciplineList';
 export { default  as EnrollmentModal} from './enrollmentModal/enrollmentModal';

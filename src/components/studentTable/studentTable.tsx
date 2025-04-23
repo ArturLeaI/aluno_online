@@ -89,7 +89,6 @@ const StudentTable: React.FC<StudentTableProps> = ({
                   <TableCell>{student.sexo || 'Não informado'}</TableCell>
                   {(showViewActions || !hideActions) && (
                     <TableCell align="center">
-                      {/* Botão Ver Detalhes - visível para todos */}
                       <IconButton
                         onClick={() => onViewDetails(student)}
                         aria-label="ver detalhes"
@@ -100,7 +99,6 @@ const StudentTable: React.FC<StudentTableProps> = ({
                         <VisibilityIcon fontSize="small" />
                       </IconButton>
 
-                      {/* Botão Matricular - visível APENAS para professores */}
                       {!hideActions && !showViewActions && (
                         <IconButton
                           onClick={() => onEnroll(student)}
@@ -113,7 +111,6 @@ const StudentTable: React.FC<StudentTableProps> = ({
                         </IconButton>
                       )}
 
-                      {/* Botão Ver Notas - visível para todos */}
                       <IconButton
                         onClick={() => onViewGrades(student)}
                         aria-label="ver notas"

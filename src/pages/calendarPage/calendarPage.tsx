@@ -4,18 +4,16 @@ import { DateTime } from 'luxon';
 import { useUserType } from '../../hooks/useUserType';
 import { useDisciplineStore, useCalendarStore } from '../../store';
 import { CalendarHeader, MonthNavigator, WeekDaysHeader, CalendarGrid, EventListDialog, EventDialog, NotificationSnackbar } from '../../components';
-import { SchoolEvent } from './calendarPage.type';
 
 const SchoolCalendar: React.FC = () => {
   const userType = useUserType();
   const isProfessor = userType === 'professor';
   const { disciplines } = useDisciplineStore();
-  const { events, addEvent, updateEvent, deleteEvent } = useCalendarStore();
+  const { events, deleteEvent } = useCalendarStore();
 
   const [currentMonth, setCurrentMonth] = useState(DateTime.now());
   const [selectedDate, setSelectedDate] = useState<DateTime | null>(null);
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false);
-  const [currentEvent, setCurrentEvent] = useState<SchoolEvent | null>(null);
 
   const handlePrevMonth = () => setCurrentMonth(currentMonth.minus({ months: 1 }));
   const handleNextMonth = () => setCurrentMonth(currentMonth.plus({ months: 1 }));

@@ -1,14 +1,9 @@
 import React from 'react';
-import { Button, ButtonProps } from '@mui/material';
+import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
-
-interface AddButtonProps extends ButtonProps {
-  routePath: string;       
-  buttonText: string;      
-  floatRight?: boolean;    
-  startIcon?: React.ReactNode; 
-}
+import { AddButtonProps } from './addButtonStudent.type';
+import { getButtonStyles } from './addButtonStudent.style';
 
 const AddButton: React.FC<AddButtonProps> = ({
   routePath,
@@ -29,15 +24,7 @@ const AddButton: React.FC<AddButtonProps> = ({
       color={color}
       size={size}
       onClick={() => navigate(routePath)}
-      sx={{
-        gap: 1,
-        textTransform: 'none',
-        borderRadius: '4px',
-        fontWeight: 'bold',
-        marginBottom: '15px',
-        ...(floatRight && { ml: 'auto' }),
-        ...sx,
-      }}
+      sx={getButtonStyles(floatRight, sx)}
       startIcon={startIcon}
       {...props}
     >

@@ -33,7 +33,7 @@ interface Student {
 interface Discipline {
   id: string;
   codigo: string;
-  nome: string;
+  name: string;
 }
 
 interface Enrollment {
@@ -65,7 +65,7 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({
   const [selectedTab, setSelectedTab] = useState(0);
 
   const getDisciplineInfo = (id: string) => {
-    return disciplines.find(d => d.id === id) || { nome: 'Desconhecida', codigo: 'N/A', professor: 'N/A' };
+    return disciplines.find(d => d.id === id) || { name: 'Desconhecida', codigo: 'N/A', professor: 'N/A' };
   };
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -155,7 +155,7 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({
                       <TableRow key={enrollment.id}>
                         <TableCell>{enrollment.periodo || '---'}</TableCell>
                         <TableCell>
-                          {discipline.codigo} - {discipline.nome}
+                          {discipline.codigo} - {discipline.name}
                         </TableCell>
                         <TableCell align="center">80</TableCell>
                         <TableCell align="center">

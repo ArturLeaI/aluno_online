@@ -27,7 +27,7 @@ interface Student {
 interface Discipline {
   id: string;
   codigo: string;
-  nome: string;
+  name: string;
 }
 
 interface Enrollment {
@@ -62,7 +62,7 @@ const StudentGradesModal: React.FC<StudentGradesModalProps> = ({
   onClose
 }) => {
   const getDisciplineInfo = (id: string) => {
-    return disciplines.find(d => d.id === id) || { nome: 'Desconhecida', codigo: 'N/A', professor: 'N/A' };
+    return disciplines.find(d => d.id === id) || { name: 'Desconhecida', codigo: 'N/A', professor: 'N/A' };
   };
 
   const hasGrades = grades.some(g =>
@@ -93,7 +93,7 @@ const StudentGradesModal: React.FC<StudentGradesModalProps> = ({
 
         return [
           discipline?.codigo || 'N/A',
-          discipline?.nome || 'Desconhecida',
+          discipline?.name || 'Desconhecida',
           grade.p1?.toFixed(1) || 'N/A',
           grade.exercises?.toFixed(1) || 'N/A',
           grade.report?.toFixed(1) || 'N/A',
@@ -180,7 +180,7 @@ const StudentGradesModal: React.FC<StudentGradesModalProps> = ({
                       return (
                         <TableRow key={grade.id}>
                           <TableCell>
-                            {discipline?.codigo} - {discipline?.nome || 'Desconhecida'}
+                            {discipline?.codigo} - {discipline?.name || 'Desconhecida'}
                           </TableCell>
                           <TableCell align="center">{grade.p1?.toFixed(1) || 'N/A'}</TableCell>
                           <TableCell align="center">{grade.exercises?.toFixed(1) || 'N/A'}</TableCell>
