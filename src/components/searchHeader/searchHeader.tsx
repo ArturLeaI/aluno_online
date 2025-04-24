@@ -5,10 +5,17 @@ import AddButton from '../addButtonStudent/addButtonStudent';
 import { SearchHeaderProps } from './searchHeader.type';
 import { containerStyle, textFieldStyle } from './searchHeader.style';
 
-const SearchHeader: React.FC<SearchHeaderProps> = ({ termoBusca, onSearchChange }) => (
+const SearchHeader: React.FC<SearchHeaderProps> = ({ 
+  termoBusca, 
+  onSearchChange, 
+  placeholder = "Buscar...",
+  showAddButton = true,
+  addButtonPath = "",
+  addButtonText = "Adicionar"
+}) => (
   <Box sx={containerStyle}>
     <TextField
-      placeholder="Buscar professores..."
+      placeholder={placeholder}
       variant="outlined"
       size="small"
       value={termoBusca}
@@ -30,11 +37,13 @@ const SearchHeader: React.FC<SearchHeaderProps> = ({ termoBusca, onSearchChange 
       }}
     />
 
-    <AddButton
-      routePath="/adicionar-professor"
-      buttonText="Adicionar Professor"
-    />
+    {showAddButton && (
+      <AddButton
+        routePath={addButtonPath}
+        buttonText={addButtonText}
+      />
+    )}
   </Box>
 );
 
-export default SearchHeader;
+export default SearchHeader

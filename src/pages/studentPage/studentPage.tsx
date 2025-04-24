@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Box, TablePagination, TextField, InputAdornment, IconButton, Typography } from '@mui/material';
-import { Search as SearchIcon, Close as CloseIcon } from '@mui/icons-material';
+import { Box, TablePagination, Typography } from '@mui/material';
 import { useStudentStore, useDisciplineStore, useEnrollmentStore, useGradeStore } from '../../store';
-import { AddButton, StudentTable, StudentFilters, StudentDetailsModal, StudentGradesModal, EnrollmentModal } from '../../components';
+import { AddButton, StudentTable, StudentFilters, StudentDetailsModal, StudentGradesModal, EnrollmentModal, SearchHeader } from '../../components';
 import * as Styles from './studentPage.style';
 
 const StudentPage: React.FC = () => {
@@ -30,9 +29,7 @@ const StudentPage: React.FC = () => {
     setUserCPF(cpf);
   }, []);
 
-  const loggedInStudent = userType === 'aluno' && userCPF
-    ? students.find(student => student.cpf === userCPF)
-    : null;
+  const loggedInStudent = userType === 'aluno' && userCPF ? students.find(student => student.cpf === userCPF) : null;
 
   const filteredStudents = students.filter(student => {
     if (userType === 'aluno') {
@@ -49,93 +46,50 @@ const StudentPage: React.FC = () => {
   });
 
   const handleEnrollStudent = (data: { disciplinesIds: string[]; studentCpf?: string }) => {
-    const disciplinesIds = data.disciplinesIds;
     if (!selectedStudent) return;
 
-    const today = new Date().toISOString().split('T')[0];
-    const currentPeriod = '2023.2';
-
-    const newEnrollments = disciplinesIds
+    const newEnrollments = data.disciplinesIds
       .filter(disciplinaId => !getEnrollmentsByStudent(selectedStudent.id).some(e => e.disciplinaId === disciplinaId))
       .map(disciplinaId => ({
         id: Date.now().toString() + Math.random().toString().substring(2, 8),
         alunoId: selectedStudent.id,
         disciplinaId,
-        dataMatricula: today,
-        periodo: currentPeriod,
+        dataMatricula: new Date().toISOString().split('T')[0],
+        periodo: '2023.2',
         status: 'ativo' as const
       }));
 
-    newEnrollments.forEach(enrollment => {
-      addEnrollment(enrollment);
-    });
+    newEnrollments.forEach(enrollment => addEnrollment(enrollment));
 
     setOpenEnrollmentModal(false);
     setSelectedStudent(null);
-
-    if (data.studentCpf) {
-      console.log('CPF do aluno matriculado:', data.studentCpf);
-    }
   };
 
   if (userType === 'aluno' && !loggedInStudent) {
-    return (
-      <Box sx={Styles.containerStyles}>
-        <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
-          Nenhum registro encontrado para o seu CPF. Por favor, entre em contato com a administração.
-        </Typography>
-      </Box>
-    );
+    return <Box sx={Styles.containerStyles}><Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>Nenhum registro encontrado para o seu CPF. Por favor, entre em contato com a administração.</Typography></Box>;
   }
 
   return (
     <Box sx={Styles.containerStyles}>
       {userType === 'professor' && (
-        <Box sx={Styles.headerStyles}>
-          <TextField
-            placeholder="Buscar alunos..."
-            variant="outlined"
-            size="small"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            sx={Styles.searchFieldStyles}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-              endAdornment: searchTerm && (
-                <InputAdornment position="end">
-                  <IconButton size="small" onClick={() => setSearchTerm('')}>
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-
-          <StudentFilters
-            disciplines={disciplines}
-            onFilterChange={setSelectedDisciplineFilter}
-            onResetFilters={() => {
-              setSearchTerm('');
-              setSelectedDisciplineFilter('');
-            }}
-          />
-
-          <AddButton routePath="/adicionar-aluno" buttonText="Adicionar Aluno" />
-        </Box>
+        <>
+          <Box sx={Styles.headerStyles}>
+            <SearchHeader
+              termoBusca={searchTerm}
+              onSearchChange={setSearchTerm}
+              placeholder="Buscar alunos..."
+              showAddButton={false}
+            />
+            <StudentFilters disciplines={disciplines} onFilterChange={setSelectedDisciplineFilter} onResetFilters={() => { setSearchTerm(''); setSelectedDisciplineFilter(''); }} />
+            <AddButton routePath="/adicionar-aluno" buttonText="Adicionar Aluno" />
+          </Box>
+        </>
       )}
 
       {userType === 'aluno' && loggedInStudent && (
         <Box sx={{ mb: 2 }}>
-          <Typography variant="h5" gutterBottom>
-            Meus Dados Acadêmicos
-          </Typography>
-          <Typography variant="body1">
-            CPF: {loggedInStudent.cpf}
-          </Typography>
+          <Typography variant="h5" gutterBottom>Meus Dados Acadêmicos</Typography>
+          <Typography variant="body1">CPF: {loggedInStudent.cpf}</Typography>
         </Box>
       )}
 
@@ -145,19 +99,10 @@ const StudentPage: React.FC = () => {
         grades={grades}
         page={page}
         rowsPerPage={rowsPerPage}
-        onViewDetails={(student) => {
-          setSelectedStudent(student);
-          setOpenModal(true);
-        }}
-        onEnroll={(student) => {
-          setSelectedStudent(student);
-          setOpenEnrollmentModal(true);
-        }}
-        onViewGrades={(student) => {
-          setSelectedStudentForGrades(student);
-          setOpenGradesModal(true);
-        }}
-        hideActions={userType === 'aluno'} 
+        onViewDetails={(student) => { setSelectedStudent(student); setOpenModal(true); }}
+        onEnroll={(student) => { setSelectedStudent(student); setOpenEnrollmentModal(true); }}
+        onViewGrades={(student) => { setSelectedStudentForGrades(student); setOpenGradesModal(true); }}
+        hideActions={userType === 'aluno'}
         showViewActions={userType === 'aluno'}
       />
 
@@ -169,10 +114,7 @@ const StudentPage: React.FC = () => {
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={(_, newPage) => setPage(newPage)}
-          onRowsPerPageChange={(e) => {
-            setRowsPerPage(parseInt(e.target.value, 10));
-            setPage(0);
-          }}
+          onRowsPerPageChange={(e) => { setRowsPerPage(parseInt(e.target.value, 10)); setPage(0); }}
           labelRowsPerPage="Linhas por página:"
           labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
           sx={Styles.paginationStyles}
@@ -185,10 +127,7 @@ const StudentPage: React.FC = () => {
         enrollments={selectedStudent ? getEnrollmentsByStudent(selectedStudent.id) : []}
         disciplines={disciplines}
         onClose={() => setOpenModal(false)}
-        onEnroll={() => {
-          setOpenModal(false);
-          setOpenEnrollmentModal(true);
-        }}
+        onEnroll={() => { setOpenModal(false); setOpenEnrollmentModal(true); }}
       />
 
       <StudentGradesModal
@@ -207,10 +146,7 @@ const StudentPage: React.FC = () => {
           disciplines={disciplines}
           enrollments={selectedStudent ? getEnrollmentsByStudent(selectedStudent.id) : []}
           onClose={() => setOpenEnrollmentModal(false)}
-          onEnroll={(data) => handleEnrollStudent({
-            disciplinesIds: Array.isArray(data) ? data : data.disciplinesIds,
-            studentCpf: selectedStudent?.cpf
-          })}
+          onEnroll={(data) => handleEnrollStudent({ disciplinesIds: Array.isArray(data) ? data : data.disciplinesIds, studentCpf: selectedStudent?.cpf })}
         />
       )}
     </Box>
