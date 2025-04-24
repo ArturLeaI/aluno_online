@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Paper, Typography, Button } from '@mui/material';
-import { DisciplineSelector, GradesTable } from '../../components/index';
+import { DisciplineSelector, GradesTable } from '../../components';
 import * as Stores from '../../store';
 import * as Styles from './gradePage.style';
 import { GradeInput } from './gradePage.type';
@@ -9,136 +9,65 @@ const GradesPage: React.FC = () => {
   const { students } = Stores.useStudentStore();
   const { disciplines } = Stores.useDisciplineStore();
   const { enrollments, getEnrollmentsByDiscipline } = Stores.useEnrollmentStore();
-  const { grades: storedGrades, saveGrade, updateGrade, getGradesByEnrollment } = Stores.useGradeStore();
-  
-  const [selectedDiscipline, setSelectedDiscipline] = useState<string>('');
+  const { grades, saveGrade, updateGrade, getGradesByEnrollment } = Stores.useGradeStore();
+
+  const [selectedDiscipline, setSelectedDiscipline] = useState('');
   const [gradeInputs, setGradeInputs] = useState<GradeInput[]>([]);
-  const [enrolledStudents, setEnrolledStudents] = useState<string[]>([]);
 
   useEffect(() => {
-    if (selectedDiscipline) {
-      const disciplineEnrollments = getEnrollmentsByDiscipline(selectedDiscipline);
-      const enrolledIds = disciplineEnrollments.map(e => e.alunoId);
-      setEnrolledStudents(enrolledIds);
-      
-      const initialGrades = enrolledIds.map(studentId => {
-        const enrollment = disciplineEnrollments.find(e => e.alunoId === studentId);
-        if (!enrollment) return {
-          studentId,
-          p1: null,
-          exercises: null,
-          report: null
-        };
-
-        const existingGrade = getGradesByEnrollment(enrollment.id);
-        return {
-          studentId,
-          p1: existingGrade?.p1 || null,
-          exercises: existingGrade?.exercises || null,
-          report: existingGrade?.report || null
-        };
-      });
-      
-      setGradeInputs(initialGrades);
-    } else {
-      setEnrolledStudents([]);
-      setGradeInputs([]);
-    }
-  }, [selectedDiscipline, enrollments, storedGrades]);
-
-  const handleGradeChange = (
-    studentId: string,
-    field: 'p1' | 'exercises' | 'report',
-    value: string
-  ) => {
-    const numericValue = value === '' ? null : parseFloat(value);
+    if (!selectedDiscipline) return setGradeInputs([]);
     
-    setGradeInputs(prevGrades =>
-      prevGrades.map(grade =>
-        grade.studentId === studentId
-          ? { ...grade, [field]: numericValue }
-          : grade
-      )
-    );
+    const disciplineEnrollments = getEnrollmentsByDiscipline(selectedDiscipline);
+    const gradesData = disciplineEnrollments.map(({ alunoId, id }) => {
+      const { p1 = null, exercises = null, report = null } = getGradesByEnrollment(id) || {};
+      return { studentId: alunoId, p1, exercises, report };
+    });
+
+    setGradeInputs(gradesData);
+  }, [selectedDiscipline, enrollments, grades]);
+
+  const handleGradeChange = (studentId: string, field: keyof GradeInput, value: string) => {
+    const numericValue = value ? parseFloat(value) : null;
+    setGradeInputs(prev => prev.map(g => g.studentId === studentId ? { ...g, [field]: numericValue } : g));
   };
 
   const handleSubmit = () => {
-    if (!selectedDiscipline) return;
-
     const disciplineEnrollments = getEnrollmentsByDiscipline(selectedDiscipline);
 
-    gradeInputs.forEach(input => {
-      const enrollment = disciplineEnrollments.find(e => e.alunoId === input.studentId);
+    gradeInputs.forEach(({ studentId, p1, exercises, report }) => {
+      const enrollment = disciplineEnrollments.find(e => e.alunoId === studentId);
       if (!enrollment) return;
 
-      const existingGrade = getGradesByEnrollment(enrollment.id);
-
-      const gradeData = {
-        enrollmentId: enrollment.id,
-        p1: input.p1,
-        exercises: input.exercises,
-        report: input.report
-      };
-
-      if (existingGrade) {
-        updateGrade(existingGrade.id, gradeData);
-      } else {
-        saveGrade(gradeData);
-      }
+      const data = { enrollmentId: enrollment.id, p1, exercises, report };
+      const existing = getGradesByEnrollment(enrollment.id);
+      existing ? updateGrade(existing.id, data) : saveGrade(data);
     });
 
     alert('Notas salvas com sucesso!');
   };
 
-  const filteredStudents = students.filter(student => 
-    enrolledStudents.includes(student.id)
-  );
-
-  const gradeRows = filteredStudents.map(student => {
-    const grade = gradeInputs.find(g => g.studentId === student.id) || {
-      studentId: student.id,
-      p1: null,
-      exercises: null,
-      report: null
-    };
-
-    return {
+  const enrolledStudentIds = getEnrollmentsByDiscipline(selectedDiscipline).map(e => e.alunoId);
+  const gradeRows = students
+    .filter(({ id }) => enrolledStudentIds.includes(id))
+    .map(student => ({
       student,
-      grade,
-      onGradeChange: (field: 'p1' | 'exercises' | 'report', value: string) => 
-        handleGradeChange(student.id, field, value)
-    };
-  });
+      grade: gradeInputs.find(g => g.studentId === student.id) || { studentId: student.id, p1: null, exercises: null, report: null },
+      onGradeChange: (field: keyof GradeInput, value: string) => handleGradeChange(student.id, field, value)
+    }));
 
   return (
     <Box sx={Styles.containerStyles}>
       <Paper sx={Styles.paperStyles}>
-        <Typography variant="h5" sx={Styles.titleStyles}>
-          Lançamento de Notas
-        </Typography>
+        <Typography variant="h5" sx={Styles.titleStyles}>Lançamento de Notas</Typography>
 
         <Box sx={Styles.formStyles}>
-          <DisciplineSelector
-            disciplines={disciplines}
-            value={selectedDiscipline}
-            onChange={setSelectedDiscipline}
-          />
-
-          {selectedDiscipline && (
-            <GradesTable rows={gradeRows} />
-          )}
+          <DisciplineSelector disciplines={disciplines} value={selectedDiscipline} onChange={setSelectedDiscipline} />
+          {selectedDiscipline && <GradesTable rows={gradeRows} />}
         </Box>
 
-        {selectedDiscipline && filteredStudents.length > 0 && (
+        {selectedDiscipline && gradeInputs.length > 0 && (
           <Box sx={Styles.buttonContainerStyles}>
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              disabled={gradeInputs.length === 0}
-              sx={Styles.saveButtonStyles}
-            >
-              Salvar Notas
-            </Button>
+            <Button variant="contained" onClick={handleSubmit} sx={Styles.saveButtonStyles}>Salvar Notas</Button>
           </Box>
         )}
       </Paper>

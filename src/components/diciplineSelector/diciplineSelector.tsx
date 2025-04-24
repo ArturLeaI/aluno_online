@@ -20,7 +20,7 @@ const DisciplineSelector: React.FC<DisciplineSelectorProps> = ({
       <option value=""></option>
       {disciplines.map((discipline) => (
         <option key={discipline.id} value={discipline.id}>
-          {discipline.nome} - {discipline.codigo}
+          {discipline.name} - {discipline.codigo}
         </option>
       ))}
     </TextField>

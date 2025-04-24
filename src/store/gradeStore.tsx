@@ -16,6 +16,7 @@ interface GradeStore {
   getGradesByEnrollment: (enrollmentId: string) => Grade | undefined;
   getGradesByDiscipline: (disciplineId: string) => Grade[];
   saveGrade: (grade: Omit<Grade, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  updateGrade: (id: string, updatedData: Partial<Omit<Grade, 'id' | 'enrollmentId' | 'createdAt'>>) => void;
 }
 
 export const useGradeStore = create<GradeStore>()(
@@ -42,6 +43,19 @@ export const useGradeStore = create<GradeStore>()(
         set((state) => ({ grades: [...state.grades, newGrade] }));
       },
       
+      updateGrade: (id, updatedData) => {
+        set((state) => ({
+          grades: state.grades.map((grade) => 
+            grade.id === id 
+              ? { 
+                  ...grade, 
+                  ...updatedData, 
+                  updatedAt: new Date().toISOString() 
+                } 
+              : grade
+          )
+        }));
+      }
     }),
     {
       name: 'grade-storage',
