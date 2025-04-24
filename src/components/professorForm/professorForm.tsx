@@ -1,18 +1,27 @@
-// src/pages/addStudent/components/StudentForm.tsx
+// src/pages/addProfessor/components/ProfessorForm.tsx
 import React from 'react';
 import { Box, Typography, Button, Paper } from '@mui/material';
-import { FormField } from '../formField/formField';
-import { fieldGroups } from '../../pages/addStudent/addStudents.utils';
-import { containerStyles, paperStyles, titleStyles, formStyles, fieldsContainerStyles, buttonContainerStyles, cancelButtonStyles, saveButtonStyles } from '../../pages/addStudent/addStudent.style';
+import { FormField } from '../formFieldProfessor/formFieldProfessor';
+import { fieldGroups } from '../../pages/addProfessor/addProfessor.utils';
+import {
+  containerStyles,
+  paperStyles,
+  titleStyles,
+  formStyles,
+  fieldsContainerStyles,
+  buttonContainerStyles,
+  cancelButtonStyles,
+  saveButtonStyles
+} from '../../pages/addProfessor/addProfessor.style';
 
-interface StudentFormProps {
+interface ProfessorFormProps {
   control: any;
   errors: any;
   onSubmit: () => void;
   onCancel: () => void;
 }
 
-const StudentForm: React.FC<StudentFormProps> = ({
+const ProfessorForm: React.FC<ProfessorFormProps> = ({
   control,
   errors,
   onSubmit,
@@ -22,7 +31,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
     <Box sx={containerStyles}>
       <Paper sx={paperStyles}>
         <Typography variant="h6" sx={titleStyles}>
-          Cadastro de Aluno
+          Cadastro de Professor
         </Typography>
 
         <Box component="form" onSubmit={onSubmit} sx={formStyles}>
@@ -66,4 +75,4 @@ const StudentForm: React.FC<StudentFormProps> = ({
   );
 };
 
-export default StudentForm;
+export default ProfessorForm;

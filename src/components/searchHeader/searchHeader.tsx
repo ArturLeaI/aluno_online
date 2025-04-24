@@ -11,7 +11,7 @@ const SearchHeader: React.FC<SearchHeaderProps> = ({
   placeholder = "Buscar...",
   showAddButton = true,
   addButtonPath = "",
-  addButtonText = "Adicionar"
+  addButtonText = "Adicionaraa"
 }) => (
   <Box sx={containerStyle}>
     <TextField

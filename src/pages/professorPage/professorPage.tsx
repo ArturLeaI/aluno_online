@@ -40,9 +40,11 @@ const ProfessorPage: React.FC = () => {
 
   return (
     <Box sx={{ width: '100%', p: 3 }}>
-      <SearchHeader 
-        termoBusca={termoBusca} 
-        onSearchChange={setTermoBusca} 
+      <SearchHeader
+        termoBusca={termoBusca}
+        onSearchChange={setTermoBusca}
+        addButtonPath="/adicionar-professor"
+        addButtonText="Adicionar Professor"
       />
 
       <ProfessoresTable
