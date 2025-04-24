@@ -73,14 +73,26 @@ const StudentPage: React.FC = () => {
     <Box sx={Styles.containerStyles}>
       {userType === 'professor' && (
         <>
-          <Box sx={Styles.headerStyles}>
-            <SearchHeader
-              termoBusca={searchTerm}
-              onSearchChange={setSearchTerm}
-              placeholder="Buscar alunos..."
-              showAddButton={false}
+          <Box sx={{
+            ...Styles.headerStyles,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            flexWrap: 'wrap'
+          }}>
+            <Box sx={{ flex: 1, minWidth: 300 }}>
+              <SearchHeader
+                termoBusca={searchTerm}
+                onSearchChange={setSearchTerm}
+                placeholder="Buscar alunos..."
+                showAddButton={false}
+              />
+            </Box>
+            <StudentFilters
+              disciplines={disciplines}
+              onFilterChange={setSelectedDisciplineFilter}
+              onResetFilters={() => { setSearchTerm(''); setSelectedDisciplineFilter(''); }}
             />
-            <StudentFilters disciplines={disciplines} onFilterChange={setSelectedDisciplineFilter} onResetFilters={() => { setSearchTerm(''); setSelectedDisciplineFilter(''); }} />
             <AddButton routePath="/adicionar-aluno" buttonText="Adicionar Aluno" />
           </Box>
         </>

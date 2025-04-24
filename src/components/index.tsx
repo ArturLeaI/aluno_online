@@ -18,6 +18,7 @@ export { default  as ProfessoresTable } from './professorTable/professorTable';
 export { default  as DisciplineSearchHeader} from './diciplineSearchHeader/diciplineSearchHeader';
 export { default  as DisciplinesTable } from './disciplinesTable/disciplinesTable';
 export { default  as DisciplineDetailsModal } from './disciplineDetailsModal/disciplineDetailsModal';
+export { default  as StudentForm } from './studentForm/studentForm';
 export { CalendarHeader } from './calendarComponents/calendarHeader/calendarHeader';
 export { MonthNavigator } from './calendarComponents/monthNavigator/monthNavigator';
 export { WeekDaysHeader } from './calendarComponents/weekDaysHeader/weekDaysHeader';
