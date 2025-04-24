@@ -1,20 +1,6 @@
 import React from 'react';
-import { 
-  TextField, 
-  OutlinedTextFieldProps, 
-  SxProps, 
-  Theme 
-} from '@mui/material';
-
-interface GenericTextFieldProps extends Omit<OutlinedTextFieldProps, 'variant'> {
-  label: string;
-  name: string;
-  sx?: SxProps<Theme>;
-  InputLabelProps?: any;
-  helperText?: React.ReactNode;
-  multiline?: boolean;
-  rows?: number | string;
-}
+import { TextField } from '@mui/material';
+import { GenericTextFieldProps } from './genericTextField.type';
 
 const GenericTextField: React.FC<GenericTextFieldProps> = ({
   label,
@@ -47,7 +33,7 @@ const GenericTextField: React.FC<GenericTextFieldProps> = ({
       fullWidth={fullWidth}
       variant="outlined"
       size="small"
-      sx={{ 
+      sx={{
         backgroundColor: '#fff',
         '& .MuiOutlinedInput-root': {
           '& fieldset': {
@@ -60,7 +46,7 @@ const GenericTextField: React.FC<GenericTextFieldProps> = ({
             borderColor: '#1976d2',
           },
         },
-        ...sx 
+        ...sx
       }}
       InputLabelProps={{
         shrink: type === 'date' ? true : undefined,
@@ -79,4 +65,4 @@ const GenericTextField: React.FC<GenericTextFieldProps> = ({
   );
 };
 
-export default GenericTextField
+export default GenericTextField;

@@ -1,11 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { GenericModal, DetailItem } from '../../components';
-
-interface DisciplineDetailsModalProps {
-  open: boolean;
-  onClose: () => void;
-  discipline: any;
-}
+import { DisciplineDetailsModalProps} from './disciplineDetailsModal.type';
 
  const DisciplineDetailsModal = ({
   open,
@@ -26,24 +21,22 @@ interface DisciplineDetailsModalProps {
           gap: 3,
           mb: 3
         }}>
-          {/* Coluna 1 - Informações Básicas */}
           <Box>
             <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
               Informações Básicas
             </Typography>
             <DetailItem label="Nome" value={discipline.nome} />
             <DetailItem label="Código" value={discipline.codigo} />
-            <DetailItem label="Carga Horária" value={discipline.cargaHoraria} />
-            <DetailItem label="Período" value={discipline.periodo} />
+            <DetailItem label="Carga Horária" value={discipline.cargaHoraria ?? 'Não informado'} />
+            <DetailItem label="Período" value={discipline.periodo ?? 'Não informado'} />
           </Box>
 
-          {/* Coluna 2 - Responsáveis */}
           <Box>
             <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
               Responsáveis
             </Typography>
-            <DetailItem label="Professor" value={discipline.professor} />
-            <DetailItem label="Departamento" value={discipline.departamento} />
+            <DetailItem label="Professor" value={discipline.professor ?? 'Não informado'} />
+            <DetailItem label="Departamento" value={discipline.departamento ?? 'Não informado'} />
             {discipline.preRequisitos && (
               <DetailItem
                 label="Pré-requisitos"
@@ -53,7 +46,6 @@ interface DisciplineDetailsModalProps {
           </Box>
         </Box>
 
-        {/* Descrição */}
         <Box sx={{ mt: 3 }}>
           <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
             Descrição

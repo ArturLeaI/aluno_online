@@ -1,11 +1,7 @@
 import { Box, TextField, InputAdornment, IconButton } from '@mui/material';
 import { Search as SearchIcon, Close as CloseIcon } from '@mui/icons-material';
 import { AddButton } from '../../components';
-
-interface DisciplineSearchHeaderProps {
-    searchTerm: string;
-    onSearchChange: (value: string) => void;
-}
+import { DisciplineSearchHeaderProps } from './diciplineSearchHeader.type';
 
 const DisciplineSearchHeader = ({
     searchTerm,
@@ -49,4 +45,4 @@ const DisciplineSearchHeader = ({
     </Box>
 );
 
-export default DisciplineSearchHeader
+export default DisciplineSearchHeader;

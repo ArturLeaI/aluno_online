@@ -1,9 +1,5 @@
 import { TextField } from '@mui/material';
-
-interface GradeInputFieldProps {
-  value: number | null;
-  onChange: (value: string) => void;
-}
+import { GradeInputFieldProps } from './gradeInputField.type';
 
 const GradeInputField: React.FC<GradeInputFieldProps> = ({ value, onChange }) => {
   return (

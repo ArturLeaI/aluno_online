@@ -1,71 +1,19 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  Divider,
-  Paper,
-  Tab,
-  Tabs,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  Chip
-} from '@mui/material';
+import { Box, Button, Divider, Paper, Tab, Tabs, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Chip } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import DetailItem from '../detailItem/detailItem';
 import GenericModal from '../genericModal/genericModal';
+import { StudentDetailsModalProps, Discipline } from './studentDetailsModal.type';
+import { personalInfoBoxStyle, sectionTitleStyle, tableContainerStyle, tableRowHeaderStyle, chipStyle } from './studentDetailsModal.style';
 
-interface Student {
-  id: string;
-  nomeCompleto: string;
-  dataNascimento: string;
-  cpf?: string;
-  sexo?: string;
-  estadoCivil?: string;
-  contato?: string;
-  nacionalidade?: string;
-}
-
-interface Discipline {
-  id: string;
-  codigo: string;
-  name: string;
-}
-
-interface Enrollment {
-  id: string;
-  disciplinaId: string;
-  periodo: string;
-  status: 'ativo' | 'inativo' | 'concluído';
-}
-
-interface StudentDetailsModalProps {
-  open: boolean;
-  student: Student | null;
-  enrollments: Enrollment[];
-  disciplines: Discipline[];
-  onClose: () => void;
-  onEnroll: () => void;
-  isProfessor?: boolean; 
-}
-
-const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({
-  open,
-  student,
-  enrollments,
-  disciplines,
-  onClose,
-  onEnroll,
-  isProfessor = false
-}) => {
+const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({open,student, enrollments, disciplines, onClose, onEnroll,isProfessor = false}) => {
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const getDisciplineInfo = (id: string) => {
-    return disciplines.find(d => d.id === id) || { name: 'Desconhecida', codigo: 'N/A', professor: 'N/A' };
+  const getDisciplineInfo = (id: string): Discipline => {
+    return (
+      disciplines.find(d => d.id === id) || 
+      { id: 'N/A', name: 'Desconhecida', codigo: 'N/A' }
+    );
   };
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -88,14 +36,9 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({
 
       {selectedTab === 0 && (
         <>
-          <Box sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
-            gap: 3,
-            mb: 3
-          }}>
+          <Box sx={personalInfoBoxStyle}>
             <Box>
-              <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
+              <Typography variant="subtitle1" sx={sectionTitleStyle}>
                 Dados Pessoais
               </Typography>
               <DetailItem label="Nome Completo" value={student.nomeCompleto} />
@@ -105,7 +48,7 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({
             </Box>
 
             <Box>
-              <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
+              <Typography variant="subtitle1" sx={sectionTitleStyle}>
                 Informações Adicionais
               </Typography>
               <DetailItem label="CPF" value={student.cpf || 'Não informado'} />
@@ -118,7 +61,7 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({
       )}
 
       {selectedTab === 1 && (
-        <Box sx={{ mt: 2 }}>
+        <Box sx={tableContainerStyle}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Histórico de Matrículas
@@ -139,7 +82,7 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({
           {enrollments.length > 0 ? (
             <TableContainer component={Paper}>
               <Table size="small">
-                <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
+                <TableHead sx={tableRowHeaderStyle}>
                   <TableRow>
                     <TableCell sx={{ fontWeight: 'bold' }}>Período</TableCell>
                     <TableCell sx={{ fontWeight: 'bold' }}>Disciplina</TableCell>
@@ -168,6 +111,7 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({
                             color={enrollment.status === 'concluído' ? 'success' :
                               enrollment.status === 'ativo' ? 'primary' : 'default'}
                             size="small"
+                            sx={chipStyle}
                           />
                         </TableCell>
                       </TableRow>

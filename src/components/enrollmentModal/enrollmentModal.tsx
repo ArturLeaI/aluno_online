@@ -1,51 +1,11 @@
+// src/components/enrollmentModal/enrollmentModal.tsx
 import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  Chip,
-  Paper,
-  Typography
-} from '@mui/material';
+import { Box, Button, Chip, Paper, Typography } from '@mui/material';
 import GenericModal from '../genericModal/genericModal';
+import { EnrollmentModalProps } from './enrollmentModal.type';
+import { styles } from './enrollmentModal.style';
 
-interface Student {
-  id: string;
-  nomeCompleto: string;
-  cpf: string; 
-}
-
-interface Discipline {
-  id: string;
-  name: string;
-  codigo: string;
-  professor: string;
-}
-
-interface Enrollment {
-  id: string;
-  disciplinaId: string;
-  status: 'ativo' | 'inativo' | 'concluído';
-}
-
-interface EnrollmentModalProps {
-  open: boolean;
-  student: Student | null;
-  disciplines: Discipline[];
-  enrollments: Enrollment[];
-  onClose: () => void;
-  onEnroll: (data: { disciplinesIds: string[]; studentCpf: string }) => void;
-  readOnly?: boolean;
-}
-
-const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
-  open,
-  student,
-  disciplines,
-  enrollments,
-  onClose,
-  onEnroll,
-  readOnly = false
-}) => {
+const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ open, student, disciplines, enrollments, onClose, onEnroll, readOnly = false }) => {
   const [selectedDisciplines, setSelectedDisciplines] = useState<string[]>([]);
 
   const handleDisciplineSelect = (disciplineId: string) => {
@@ -81,7 +41,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
           {readOnly ? 'Disciplinas do aluno:' : 'Selecione as disciplinas para matricular o aluno:'}
         </Typography>
 
-        <Box sx={{ maxHeight: 300, overflow: 'auto', mb: 3 }}>
+        <Box sx={styles.modalContent}>
           {disciplines.map(discipline => {
             const isEnrolled = enrollments.some(e =>
               e.disciplinaId === discipline.id && e.status === 'ativo'
@@ -92,24 +52,10 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
               <Paper
                 key={discipline.id}
                 onClick={() => !isEnrolled && !readOnly && handleDisciplineSelect(discipline.id)}
-                sx={{
-                  p: 2,
-                  mb: 1,
-                  border: `1px solid ${isSelected ? 'primary.main' : isEnrolled ? 'success.light' : 'divider'}`,
-                  borderRadius: 1,
-                  cursor: isEnrolled || readOnly ? 'default' : 'pointer',
-                  backgroundColor: isSelected
-                    ? 'action.selected'
-                    : isEnrolled
-                      ? 'action.disabledBackground'
-                      : 'background.paper',
-                  '&:hover': {
-                    backgroundColor: isEnrolled || readOnly ? 'action.disabledBackground' : 'action.hover'
-                  }
-                }}
+                sx={styles.disciplinePaper(isSelected, isEnrolled, readOnly)}
               >
-                <Box display="flex" alignItems="center">
-                  <Typography fontWeight="medium" sx={{ flexGrow: 1 }}>
+                <Box sx={styles.disciplineHeader}>
+                  <Typography sx={styles.disciplineName}>
                     {discipline.name}
                   </Typography>
                   {isEnrolled && (
@@ -121,7 +67,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
                     />
                   )}
                 </Box>
-                <Typography variant="body2" color="text.secondary">
+                <Typography sx={styles.disciplineDetails}>
                   {discipline.codigo} • Prof. {discipline.professor}
                 </Typography>
               </Paper>
@@ -130,11 +76,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
         </Box>
 
         {!readOnly && selectedDisciplines.length > 0 && (
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+          <Box sx={styles.selectedDisciplinesContainer}>
+            <Typography sx={styles.selectedDisciplinesLabel}>
               Disciplinas selecionadas ({selectedDisciplines.length}):
             </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            <Box sx={styles.chipsContainer}>
               {selectedDisciplines.map(id => {
                 const discipline = disciplines.find(d => d.id === id) || { name: 'Desconhecida' };
                 return (
@@ -150,11 +96,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
           </Box>
         )}
 
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+        <Box sx={styles.actionsContainer}>
           <Button
             variant="outlined"
             onClick={onClose}
-            sx={{ textTransform: 'none' }}
+            sx={styles.button}
           >
             {readOnly ? 'Fechar' : 'Cancelar'}
           </Button>
@@ -163,7 +109,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({
               variant="contained"
               onClick={handleEnroll}
               disabled={selectedDisciplines.length === 0}
-              sx={{ textTransform: 'none' }}
+              sx={styles.button}
             >
               Confirmar Matrícula
             </Button>

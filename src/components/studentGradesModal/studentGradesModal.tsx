@@ -1,57 +1,11 @@
 import React from 'react';
-import {
-  Box,
-  Button,
-  Chip,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography
-} from '@mui/material';
+import { Box, Button, Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { PictureAsPdf as PdfIcon } from '@mui/icons-material';
 import GenericModal from '../genericModal/genericModal';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-
-interface Student {
-  id: string;
-  nomeCompleto: string;
-  dataNascimento: string;
-  cpf?: string;
-}
-
-interface Discipline {
-  id: string;
-  codigo: string;
-  name: string;
-}
-
-interface Enrollment {
-  id: string;
-  disciplinaId: string;
-  status: 'ativo' | 'inativo' | 'concluído';
-}
-
-interface Grade {
-  id: string;
-  enrollmentId: string;
-  p1: number | null;
-  exercises: number | null;
-  report: number | null;
-}
-
-interface StudentGradesModalProps {
-  open: boolean;
-  student: Student | null;
-  enrollments: Enrollment[];
-  grades: Grade[];
-  disciplines: Discipline[];
-  onClose: () => void;
-}
+import { StudentGradesModalProps } from './studentGradesModal.type';
+import { buttonStyles, tableHeaderStyles, tableCellBold, chipStyles } from './studentGradesModal.style';
 
 const StudentGradesModal: React.FC<StudentGradesModalProps> = ({
   open,
@@ -62,7 +16,7 @@ const StudentGradesModal: React.FC<StudentGradesModalProps> = ({
   onClose
 }) => {
   const getDisciplineInfo = (id: string) => {
-    return disciplines.find(d => d.id === id) || { name: 'Desconhecida', codigo: 'N/A', professor: 'N/A' };
+    return disciplines.find(d => d.id === id) || { name: 'Desconhecida', codigo: 'N/A' };
   };
 
   const hasGrades = grades.some(g =>
@@ -149,14 +103,14 @@ const StudentGradesModal: React.FC<StudentGradesModalProps> = ({
           <>
             <TableContainer component={Paper} sx={{ mb: 3 }}>
               <Table size="small">
-                <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
+                <TableHead sx={tableHeaderStyles}>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Disciplina</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }} align="center">P1 (50%)</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }} align="center">Exercícios (30%)</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }} align="center">Relatório (20%)</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }} align="center">Média</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }} align="center">Situação</TableCell>
+                    <TableCell sx={tableCellBold}>Disciplina</TableCell>
+                    <TableCell sx={tableCellBold} align="center">P1 (50%)</TableCell>
+                    <TableCell sx={tableCellBold} align="center">Exercícios (30%)</TableCell>
+                    <TableCell sx={tableCellBold} align="center">Relatório (20%)</TableCell>
+                    <TableCell sx={tableCellBold} align="center">Média</TableCell>
+                    <TableCell sx={tableCellBold} align="center">Situação</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -191,6 +145,7 @@ const StudentGradesModal: React.FC<StudentGradesModalProps> = ({
                               label={situacao}
                               color={corSituacao}
                               size="small"
+                              sx={chipStyles}
                             />
                           </TableCell>
                         </TableRow>
@@ -205,7 +160,7 @@ const StudentGradesModal: React.FC<StudentGradesModalProps> = ({
                 variant="contained"
                 onClick={generateStudentReport}
                 startIcon={<PdfIcon />}
-                sx={{ textTransform: 'none' }}
+                sx={buttonStyles}
               >
                 Baixar Boletim em PDF
               </Button>

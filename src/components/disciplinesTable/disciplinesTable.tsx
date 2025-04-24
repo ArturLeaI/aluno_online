@@ -1,22 +1,8 @@
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    IconButton,
-    Typography
-} from '@mui/material';
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography } from '@mui/material';
 import { Visibility as VisibilityIcon } from '@mui/icons-material';
+import { DisciplinesTableProps } from './disciplinesTable.type';
 
-interface DisciplinesTableProps {
-    disciplines: any[];
-    page: number;
-    rowsPerPage: number;
-    onOpenModal: (discipline: any) => void;
-}
+
 
 const DisciplinesTable = ({
     disciplines,

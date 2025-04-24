@@ -1,12 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import GenericModal from '../genericModal/genericModal';
 import DetailItem from '../detailItem/detailItem';
-
-interface ProfessorDetailsModalProps {
-    open: boolean;
-    onClose: () => void;
-    professor: any;
-}
+import { ProfessorDetailsModalProps } from './professorDetailsModal.type';
 
 const ProfessorDetailsModal = ({
     open,
@@ -27,7 +22,6 @@ const ProfessorDetailsModal = ({
                     gap: 3,
                     mb: 3
                 }}>
-                    {/* Coluna 1 - Informações Pessoais */}
                     <Box>
                         <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
                             Informações Pessoais
@@ -38,7 +32,6 @@ const ProfessorDetailsModal = ({
                         <DetailItem label="Sexo" value={professor.sexo} />
                     </Box>
 
-                    {/* Coluna 2 - Informações Profissionais */}
                     <Box>
                         <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
                             Informações Profissionais
@@ -50,7 +43,6 @@ const ProfessorDetailsModal = ({
                     </Box>
                 </Box>
 
-                {/* Contato e Endereço */}
                 <Box sx={{ mt: 3 }}>
                     <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
                         Contato e Endereço

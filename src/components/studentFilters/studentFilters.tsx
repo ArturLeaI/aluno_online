@@ -1,36 +1,13 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  Collapse,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select
-} from '@mui/material';
-import {
-  FilterList as FilterIcon,
-  Close as CloseIcon,
-  ExpandMore as ExpandMoreIcon,
-  ExpandLess as ExpandLessIcon
-} from '@mui/icons-material';
-
-interface Discipline {
-  id: string;
-  name: string;
-}
-
-interface StudentFiltersProps {
-  disciplines: Discipline[];
-  onFilterChange: (disciplineId: string) => void;
-  onResetFilters: () => void;
-}
+import { Box, Button, Collapse, FormControl, InputLabel, MenuItem, Paper, Select } from '@mui/material';
+import { FilterList as FilterIcon, Close as CloseIcon, ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon } from '@mui/icons-material';
+import { StudentFiltersProps } from './studentFilters.type';
+import { buttonStyles, paperStyles, filterContainerStyles, formControlStyles } from './studentFilters.style';
 
 const StudentFilters: React.FC<StudentFiltersProps> = ({
   disciplines,
   onFilterChange,
-  onResetFilters
+  onResetFilters,
 }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedDisciplineFilter, setSelectedDisciplineFilter] = useState('');
@@ -53,21 +30,16 @@ const StudentFilters: React.FC<StudentFiltersProps> = ({
           startIcon={showFilters ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           endIcon={<FilterIcon />}
           onClick={() => setShowFilters(!showFilters)}
-          sx={{ textTransform: 'none' }}
+          sx={buttonStyles}
         >
           Filtros
         </Button>
       </Box>
 
       <Collapse in={showFilters}>
-        <Paper elevation={2} sx={{ p: 2, mb: 3, borderRadius: 1 }}>
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2,
-            flexWrap: 'wrap'
-          }}>
-            <FormControl size="small" sx={{ minWidth: 200 }}>
+        <Paper elevation={2} sx={paperStyles}>
+          <Box sx={filterContainerStyles}>
+            <FormControl size="small" sx={formControlStyles}>
               <InputLabel>Filtrar por matéria</InputLabel>
               <Select
                 value={selectedDisciplineFilter}
@@ -91,7 +63,7 @@ const StudentFilters: React.FC<StudentFiltersProps> = ({
                 color="inherit"
                 startIcon={<CloseIcon />}
                 onClick={handleResetFilters}
-                sx={{ textTransform: 'none' }}
+                sx={buttonStyles}
               >
                 Limpar filtros
               </Button>

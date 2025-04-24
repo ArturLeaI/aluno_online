@@ -1,10 +1,5 @@
 import { TextField } from '@mui/material';
-
-interface DisciplineSelectorProps {
-  disciplines: Array<{ id: string; nome: string; codigo: string }>;
-  value: string;
-  onChange: (value: string) => void;
-}
+import { DisciplineSelectorProps } from './diciplineSelector.type';
 
 const DisciplineSelector: React.FC<DisciplineSelectorProps> = ({ 
   disciplines, 

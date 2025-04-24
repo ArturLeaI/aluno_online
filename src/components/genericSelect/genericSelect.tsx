@@ -1,36 +1,7 @@
 import React from 'react';
-import { 
-  FormControl, 
-  InputLabel, 
-  Select, 
-  MenuItem, 
-  SelectChangeEvent, 
-  SxProps, 
-  Theme, 
-  FormHelperText,
-  Chip,
-  Box
-} from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, FormHelperText, Chip, Box } from '@mui/material';
 
-interface SelectOption {
-  value: string;
-  label: string;
-}
-
-interface GenericSelectProps {
-  label: string;
-  name: string;
-  value?: string | string[];
-  onChange?: (e: SelectChangeEvent<string | string[]>) => void;
-  options: SelectOption[];
-  required?: boolean;
-  fullWidth?: boolean;
-  sx?: SxProps<Theme>;
-  error?: boolean;
-  helperText?: React.ReactNode;
-  disabled?: boolean;
-  multiple?: boolean;
-}
+import { GenericSelectProps } from './genericSelect.type';
 
 const GenericSelect: React.FC<GenericSelectProps> = ({
   label,
@@ -48,9 +19,9 @@ const GenericSelect: React.FC<GenericSelectProps> = ({
   ...props
 }) => {
   return (
-    <FormControl 
-      fullWidth={fullWidth} 
-      size="small" 
+    <FormControl
+      fullWidth={fullWidth}
+      size="small"
       sx={{ backgroundColor: '#fff', ...sx }}
       error={error}
       disabled={disabled}
@@ -68,9 +39,9 @@ const GenericSelect: React.FC<GenericSelectProps> = ({
             {(selected as string[]).map((value) => {
               const option = options.find(opt => opt.value === value);
               return (
-                <Chip 
-                  key={value} 
-                  label={option?.label || value} 
+                <Chip
+                  key={value}
+                  label={option?.label || value}
                   size="small"
                 />
               );
@@ -90,4 +61,4 @@ const GenericSelect: React.FC<GenericSelectProps> = ({
   );
 };
 
-export default GenericSelect
+export default GenericSelect;

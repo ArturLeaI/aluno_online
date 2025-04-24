@@ -1,41 +1,8 @@
 import React from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
-  Typography
-} from '@mui/material';
-import {
-  Visibility as VisibilityIcon,
-  Add as AddIcon,
-  PictureAsPdf as PdfIcon
-} from '@mui/icons-material';
-
-interface Student {
-  id: string;
-  nomeCompleto: string;
-  dataNascimento: string;
-  cpf?: string;
-  sexo?: string;
-}
-
-interface StudentTableProps {
-  students: Student[];
-  enrollments: any[];
-  grades: any[];
-  page: number;
-  rowsPerPage: number;
-  onViewDetails: (student: Student) => void;
-  onEnroll: (student: Student) => void;
-  onViewGrades: (student: Student) => void;
-  hideActions?: boolean;
-  showViewActions?: boolean; 
-}
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography } from '@mui/material';
+import { Visibility as VisibilityIcon, Add as AddIcon, PictureAsPdf as PdfIcon } from '@mui/icons-material';
+import { StudentTableProps } from './studentTable.type';
+import { tableHeaderStyles, tableCellBold, iconButtonStyles } from './studentTable.style';
 
 const StudentTable: React.FC<StudentTableProps> = ({
   students,
@@ -62,14 +29,14 @@ const StudentTable: React.FC<StudentTableProps> = ({
   return (
     <TableContainer component={Paper}>
       <Table>
-        <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
+        <TableHead sx={tableHeaderStyles}>
           <TableRow>
-            <TableCell sx={{ fontWeight: 'bold' }}>Nome Completo</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Data Nascimento</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>CPF</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Sexo</TableCell>
+            <TableCell sx={tableCellBold}>Nome Completo</TableCell>
+            <TableCell sx={tableCellBold}>Data Nascimento</TableCell>
+            <TableCell sx={tableCellBold}>CPF</TableCell>
+            <TableCell sx={tableCellBold}>Sexo</TableCell>
             {(showViewActions || !hideActions) && (
-              <TableCell sx={{ fontWeight: 'bold' }} align="center">Ações</TableCell>
+              <TableCell sx={tableCellBold} align="center">Ações</TableCell>
             )}
           </TableRow>
         </TableHead>
@@ -94,7 +61,7 @@ const StudentTable: React.FC<StudentTableProps> = ({
                         aria-label="ver detalhes"
                         color="primary"
                         size="small"
-                        sx={{ mr: 1 }}
+                        sx={iconButtonStyles}
                       >
                         <VisibilityIcon fontSize="small" />
                       </IconButton>
@@ -105,7 +72,7 @@ const StudentTable: React.FC<StudentTableProps> = ({
                           aria-label="matricular"
                           color="secondary"
                           size="small"
-                          sx={{ mr: 1 }}
+                          sx={iconButtonStyles}
                         >
                           <AddIcon fontSize="small" />
                         </IconButton>
