@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Snackbar, Alert } from '@mui/material';
 import { DateTime } from 'luxon';
-import { useCalendarStore } from '../../../store/calendarStore';
+import { useCalendarStore } from '../../../store/calendarStore/calendarStore';
 import { NotificationSnackbarProps, NotificationState } from './notificationSnackbar.type';
 
 export const NotificationSnackbar: React.FC<NotificationSnackbarProps> = ({ events }) => {

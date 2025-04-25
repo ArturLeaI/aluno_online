@@ -2,9 +2,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useProfessorStore } from '../../store/professorStore';
-import ProfessorForm from '../../components/professorForm/professorForm';
-import { defaultValues } from './addProfessor.utils';
+import { useProfessorStore } from '../../store/professorStore/professorStore';
+import ProfessorForm from '../../components/professorComponents/professorForm/professorForm';
+import { defaultValues } from '../../mock/defaultValuesProfessor';
 
 const AddProfessorPage: React.FC = () => {
   const { adicionarProfessor } = useProfessorStore();

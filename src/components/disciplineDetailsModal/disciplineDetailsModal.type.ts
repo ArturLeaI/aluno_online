@@ -1,8 +1,8 @@
 export interface Discipline {
     nome: string;
-    codigo: string;
-    cargaHoraria?: string | number;
-    periodo?: string;
+    code: string;
+    cargaHoraria: string;
+    periodo?: string; 
     professor?: string;
     departamento?: string;
     preRequisitos?: string[];
@@ -13,4 +13,5 @@ export interface Discipline {
     open: boolean;
     onClose: () => void;
     discipline: Discipline | null;
+    
   }

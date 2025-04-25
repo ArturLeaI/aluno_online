@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { SchoolEvent } from '../../../pages/calendarPage/calendarPage.type';
+import { Discipline, SchoolEvent } from '../../../pages/calendarPage/calendarPage.type';
 
 export interface EventListDialogProps {
   open: boolean;
@@ -10,4 +10,14 @@ export interface EventListDialogProps {
   isProfessor: boolean;
   onEditEvent?: (event: SchoolEvent) => void;
   onDeleteEvent?: (id: string) => void;
+    disciplines: Discipline[];
+    initialDate?: string| null;
 }
+
+export const addButtonStyles = {
+  marginRight: 'auto',
+  backgroundColor: '#4caf50',
+  '&:hover': {
+      backgroundColor: '#388e3c',
+  }
+};

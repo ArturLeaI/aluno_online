@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, IconButton, Tooltip } from '@mui/material';
-import { People, Assessment, MenuBook, ChevronLeft, ChevronRight, School, ExitToApp, Grade, Event } from '@mui/icons-material';
+import { People, Assessment, MenuBook, ChevronLeft, ChevronRight, School, ExitToApp, Event } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { MenuItem } from './appDrawer.type';
 import {
@@ -18,11 +18,10 @@ const AppDrawer: React.FC = () => {
   const userType = localStorage.getItem('userType') as UserRole | null;
 
   const baseMenuItems: MenuItem[] = [
-    { text: 'Alunos', icon: <People />, path: '/alunos', allowedRoles: ['professor'] },
+    { text: 'Alunos', icon: <People />, path: '/alunos', allowedRoles: ['aluno', 'professor'] },
     { text: 'Lançamento de Notas', icon: <Assessment />, path: '/lancar-notas', allowedRoles: ['professor'] },
     { text: 'Matérias', icon: <MenuBook />, path: '/materias', allowedRoles: ['professor'] },
     { text: 'Professores', icon: <School />, path: '/professores', allowedRoles: ['professor'] },
-    { text: 'Minhas Notas', icon: <Grade />, path: '/minhas-notas', allowedRoles: ['aluno'] },
     { text: 'Calendário', icon: <Event />, path: '/calendario', allowedRoles: ['aluno', 'professor'] }
   ];
 

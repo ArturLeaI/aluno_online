@@ -71,6 +71,7 @@ const SchoolCalendar: React.FC = () => {
         getEventColor={getEventColor}
         isProfessor={isProfessor}
         onDeleteEvent={isProfessor ? handleDeleteEvent : undefined}
+        disciplines={disciplines}
       />
 
       {isProfessor && (

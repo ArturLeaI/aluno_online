@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useStudentStore } from '../../store/studentStore';
+import { useStudentStore } from '../../store/studentStore/studentStore';
 import { StudentForm } from '../../components';
-import { defaultValues } from './addStudents.utils';
+import { defaultValues } from '../../mock/defaultValuesStudent';
 
 const AddStudentPage: React.FC = () => {
   const { addStudent } = useStudentStore();

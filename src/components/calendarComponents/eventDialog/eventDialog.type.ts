@@ -14,4 +14,11 @@ export interface EventDialogProps {
     disciplines: Discipline[];
 }
 
-export type EventType = 'deadline' | 'test' | 'presentation';
+export interface EventDialogProps {
+    open: boolean;
+    onClose: () => void;
+    disciplines: Discipline[];
+    initialDate?: string | null;
+    
+}
+export type EventType = 'Relatorio' | 'Prova' | 'Apresentação';

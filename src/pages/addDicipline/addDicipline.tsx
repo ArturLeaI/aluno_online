@@ -18,11 +18,11 @@ import {
     cancelButtonStyles,
     saveButtonStyles
   } from './addDicipline.style';
-  import { useDisciplineStore } from '../../store/diciplineStore';
+  import { useDisciplineStore } from '../../store/disciplineStore/diciplineStore';
   
   type FormData = {
     name: string;
-    codigo: string;
+    code: string;
     cargaHoraria: string;
     professor: string;
     departamento: string;
@@ -37,7 +37,7 @@ import {
     const { control, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
       defaultValues: {
         name: '',
-        codigo: '',
+        code: '',
         cargaHoraria: '',
         professor: '',
         departamento: '',
@@ -106,14 +106,14 @@ import {
   
               <Box sx={{ display: 'flex', gap: 2 }}>
                 <Controller
-                  name="codigo"
+                  name="code"
                   control={control}
                   rules={{ required: 'Código é obrigatório' }}
                   render={({ field }) => (
                     <GenericTextField
                       label="Código"
-                      error={!!errors.codigo}
-                      helperText={errors.codigo?.message}
+                      error={!!errors.code}
+                      helperText={errors.code?.message}
                       {...field}
                     />
                   )}

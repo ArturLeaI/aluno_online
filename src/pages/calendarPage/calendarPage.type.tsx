@@ -1,10 +1,17 @@
 import { DateTime } from 'luxon';
 
-export type EventType = 'deadline' | 'test' | 'presentation';
+export type EventType = 'Relatorio' | 'Prova' | 'Apresentação';
 
 export interface Discipline {
   id: string;
   name: string;
+  code: string;
+  cargaHoraria: string;
+  professor: string;
+  departamento: string;
+  periodo: string;
+  descricao?: string;
+  preRequisitos?: string[];
 }
 
 export interface SchoolEvent {
@@ -66,7 +73,7 @@ export interface EventListDialogProps {
 export interface Discipline {
     id: string;
     name: string;
-    codigo: string;
+    code: string;
     cargaHoraria: string;
     professor: string;
     departamento: string;

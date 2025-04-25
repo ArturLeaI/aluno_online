@@ -29,3 +29,12 @@ export const secondaryActionStyles: SxProps = {
   display: 'flex',
   gap: 1
 };
+
+export const addButtonStyles = {
+  marginRight: 'auto',
+  backgroundColor: '#1976d2',
+  '&:hover': {
+    backgroundColor: '#1565c0',
+  },
+  color: '#fff', 
+};

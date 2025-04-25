@@ -10,10 +10,14 @@ export interface AlunoMatriculado {
   name: string;
 }
 
-export interface Disciplina {
+export interface Discipline {
   id: string;
   name: string;
-  codigo?: string;
-  professor?: string;
-  alunosMatriculados?: AlunoMatriculado[];
+  codigo: string; 
+  cargaHoraria: string;
+  professor: string;
+  departamento: string;
+  periodo: string;
+  descricao: string;
+  preRequisitos: string[];
 }

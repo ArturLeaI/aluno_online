@@ -1,7 +1,7 @@
 export interface Discipline {
     id: string;
     name: string;
-    codigo: string;
+    code: string;
   }
   
   export interface DisciplineSelectorProps {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, TablePagination } from '@mui/material';
-import { useDisciplineStore } from '../../store/diciplineStore';
-import { DisciplineSearchHeader, DisciplinesTable, DisciplineDetailsModal } from '../../components/index';
+import { useDisciplineStore } from '../../store/disciplineStore/diciplineStore';
+import { DisciplinesTable, DisciplineDetailsModal, SearchHeader } from '../../components/index';
 
 const DisciplinePage: React.FC = () => {
   const { disciplines } = useDisciplineStore();
@@ -14,7 +14,7 @@ const DisciplinePage: React.FC = () => {
   const filteredDisciplines = disciplines.filter(discipline => {
     return (
       discipline.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (discipline.codigo && discipline.codigo.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (discipline.code && discipline.code.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (discipline.professor && discipline.professor.toLowerCase().includes(searchTerm.toLowerCase()))
     );
   });
@@ -39,9 +39,11 @@ const DisciplinePage: React.FC = () => {
 
   return (
     <Box sx={{ width: '100%', p: 3 }}>
-      <DisciplineSearchHeader 
-        searchTerm={searchTerm} 
-        onSearchChange={setSearchTerm} 
+      <SearchHeader
+        termoBusca={searchTerm}
+        onSearchChange={setSearchTerm}
+        addButtonPath="/adicionar-materias"
+        addButtonText="Adicionar Materia"
       />
 
       <DisciplinesTable

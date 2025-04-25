@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Box, TablePagination } from '@mui/material';
-import { useProfessorStore } from '../../store/professorStore';
+import { useProfessorStore } from '../../store/professorStore/professorStore';
 import { SearchHeader, ProfessoresTable, ProfessorDetailsModal } from '../../components/index';
 
 const ProfessorPage: React.FC = () => {
