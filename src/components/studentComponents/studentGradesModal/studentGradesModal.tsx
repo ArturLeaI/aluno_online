@@ -1,49 +1,134 @@
 import React from 'react';
-import { Box, Button, Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import {  Box,  Button,  Chip,  Paper,  Table,  TableBody,  TableCell,  TableContainer,  TableHead,  TableRow,  Typography} from '@mui/material';
 import { PictureAsPdf as PdfIcon } from '@mui/icons-material';
-import GenericModal from '../../genericModal/genericModal';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import GenericModal from '../../genericModal/genericModal';
 import { StudentGradesModalProps } from './studentGradesModal.type';
-import { buttonStyles, tableHeaderStyles, tableCellBold, chipStyles } from './studentGradesModal.style';
+import {  buttonStyles,  tableHeaderStyles,  tableCellBold,  chipStyles } from './studentGradesModal.style';
 
-const StudentGradesModal: React.FC<StudentGradesModalProps> = ({
-  open,
-  student,
-  enrollments,
-  grades,
-  disciplines,
-  onClose
-}) => {
-  const getDisciplineInfo = (id: string) => {
-    return disciplines.find(d => d.id === id) || { name: 'Desconhecida', codigo: 'N/A' };
+const COLUMNS = [
+  { key: 'p1', label: 'P1 (50%)' },
+  { key: 'exercises', label: 'Exercícios (30%)' },
+  { key: 'report', label: 'Relatório (20%)' },
+  { key: 'average', label: 'Média' },
+  { key: 'status', label: 'Situação' },
+] as const;
+
+type ColumnKey = typeof COLUMNS[number]['key'];
+type ChipColor = 'success' | 'error' | 'primary' | 'default';
+
+const getDisciplineInfo = (id: string, disciplines: StudentGradesModalProps['disciplines']) =>
+  disciplines.find((d) => d.id === id) || { name: 'Desconhecida', codigo: 'N/A' };
+
+const calculateAverage = (p1: number | null, exercises: number | null, report: number | null) => {
+  const grades = [p1, exercises, report];
+  return grades.every(grade => grade !== null) 
+    ? parseFloat((p1! * 0.5 + exercises! * 0.3 + report! * 0.2).toFixed(1))
+    : null;
+};
+
+const getStatus = (
+  average: number | null,
+  enrollmentStatus?: string
+): { label: string; color: ChipColor } => {
+  if (average !== null) {
+    return {
+      label: average >= 5 ? 'Aprovado' : 'Reprovado',
+      color: average >= 5 ? 'success' : 'error'
+    };
+  }
+  return {
+    label: enrollmentStatus === 'ativo' ? 'Cursando' : 'Inativo',
+    color: enrollmentStatus === 'ativo' ? 'primary' : 'default'
   };
+};
 
-  const hasGrades = grades.some(g =>
-    enrollments.some(e => e.id === g.enrollmentId) &&
-    (g.p1 !== null || g.exercises !== null || g.report !== null)
+const gradeRenderers: Record<ColumnKey, (grade: any, avg: number | null, status: any) => React.ReactNode> = {
+  p1: (grade) => grade.p1?.toFixed(1) || 'N/A',
+  exercises: (grade) => grade.exercises?.toFixed(1) || 'N/A',
+  report: (grade) => grade.report?.toFixed(1) || 'N/A',
+  average: (_, avg) => avg?.toFixed(1) || 'N/A',
+  status: (_, __, status) => <Chip label={status.label} color={status.color} size="small" sx={chipStyles} />
+};
+
+const renderGradeValue = (key: ColumnKey, grade: any, avg: number | null, status: any) => 
+  gradeRenderers[key]?.(grade, avg, status) || 'N/A';
+
+const GradeRow: React.FC<{
+  grade: StudentGradesModalProps['grades'][0];
+  enrollments: StudentGradesModalProps['enrollments'];
+  disciplines: StudentGradesModalProps['disciplines'];
+}> = ({ grade, enrollments, disciplines }) => {
+  const enrollment = enrollments.find((e) => e.id === grade.enrollmentId);
+  const discipline = enrollment ? getDisciplineInfo(enrollment.disciplinaId, disciplines) : null;
+  const avg = calculateAverage(grade.p1, grade.exercises, grade.report);
+  const status = getStatus(avg, enrollment?.status);
+
+  return (
+    <TableRow key={grade.id}>
+      <TableCell>
+        {discipline?.codigo} - {discipline?.name || 'Desconhecida'}
+      </TableCell>
+      {COLUMNS.map((col) => (
+        <TableCell key={col.key} align="center">
+          {renderGradeValue(col.key, grade, avg, status)}
+        </TableCell>
+      ))}
+    </TableRow>
   );
+};
 
+const GradesTable: React.FC<{
+  grades: StudentGradesModalProps['grades'];
+  enrollments: StudentGradesModalProps['enrollments'];
+  disciplines: StudentGradesModalProps['disciplines'];
+}> = ({ grades, enrollments, disciplines }) => (
+  <TableContainer component={Paper} sx={{ mb: 3 }}>
+    <Table size="small">
+      <TableHead sx={tableHeaderStyles}>
+        <TableRow>
+          <TableCell sx={tableCellBold}>Disciplina</TableCell>
+          {COLUMNS.map((col) => (
+            <TableCell key={col.key} sx={tableCellBold} align="center">
+              {col.label}
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {grades
+          .filter((grade) => enrollments.some((e) => e.id === grade.enrollmentId))
+          .map((grade) => (
+            <GradeRow 
+              key={grade.id} 
+              grade={grade} 
+              enrollments={enrollments} 
+              disciplines={disciplines} 
+            />
+          ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+);
+
+const StudentGradesModal: React.FC<StudentGradesModalProps> = ({ 
+  open, 
+  student, 
+  enrollments, 
+  grades, 
+  disciplines, 
+  onClose 
+}) => {
   const generateStudentReport = () => {
-    if (!student) return;
-
     const doc = new jsPDF();
-
-    doc.setFontSize(18);
-    doc.text(`Boletim do Aluno - ${student.nomeCompleto}`, 15, 15);
-    doc.setFontSize(12);
-    doc.text(`CPF: ${student.cpf || 'Não informado'}`, 15, 25);
-    doc.text(`Data de emissão: ${new Date().toLocaleDateString()}`, 15, 35);
-
     const tableData = grades
-      .filter(grade => enrollments.some(e => e.id === grade.enrollmentId))
-      .map(grade => {
-        const enrollment = enrollments.find(e => e.id === grade.enrollmentId);
-        const discipline = enrollment ? getDisciplineInfo(enrollment.disciplinaId) : null;
-
-        const average = grade.p1 !== null && grade.exercises !== null && grade.report !== null
-          ? (grade.p1 * 0.5 + grade.exercises * 0.3 + grade.report * 0.2).toFixed(1)
-          : 'N/A';
+      .filter((grade) => enrollments.some((e) => e.id === grade.enrollmentId))
+      .map((grade) => {
+        const enrollment = enrollments.find((e) => e.id === grade.enrollmentId);
+        const discipline = enrollment ? getDisciplineInfo(enrollment.disciplinaId, disciplines) : null;
+        const average = calculateAverage(grade.p1, grade.exercises, grade.report);
+        const status = getStatus(average, enrollment?.status).label;
 
         return [
           discipline?.codigo || 'N/A',
@@ -51,36 +136,36 @@ const StudentGradesModal: React.FC<StudentGradesModalProps> = ({
           grade.p1?.toFixed(1) || 'N/A',
           grade.exercises?.toFixed(1) || 'N/A',
           grade.report?.toFixed(1) || 'N/A',
-          average,
-          enrollment?.status === 'concluído' ? 'Aprovado' :
-            enrollment?.status === 'ativo' ? 'Cursando' : 'Inativo'
+          average?.toFixed(1) || 'N/A',
+          status,
         ];
       });
 
+    doc.setFontSize(18);
+    doc.text(`Boletim do Aluno - ${student?.nomeCompleto}`, 15, 15);
+    doc.setFontSize(12);
+    doc.text(`CPF: ${student?.cpf || 'Não informado'}`, 15, 25);
+    doc.text(`Data de emissão: ${new Date().toLocaleDateString()}`, 15, 35);
+
     autoTable(doc, {
       startY: 45,
-      head: [['Código', 'Disciplina', 'P1 (50%)', 'Exercícios (30%)', 'Relatório (20%)', 'Média', 'Situação']],
+      head: [['Código', 'Disciplina', ...COLUMNS.map((col) => col.label)]],
       body: tableData,
       theme: 'grid',
-      headStyles: {
-        fillColor: [41, 128, 185],
-        textColor: 255
-      },
-      styles: {
-        cellPadding: 5,
-        fontSize: 10,
-        halign: 'center'
-      },
-      columnStyles: {
-        0: { halign: 'left' },
-        1: { halign: 'left' }
-      }
+      headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+      styles: { cellPadding: 5, fontSize: 10, halign: 'center' },
+      columnStyles: { 0: { halign: 'left' }, 1: { halign: 'left' } },
     });
 
-    doc.save(`boletim_${student.nomeCompleto.replace(/\s/g, '_')}.pdf`);
+    doc.save(`boletim_${student?.nomeCompleto.replace(/\s/g, '_')}.pdf`);
   };
 
   if (!student) return null;
+
+  const hasGrades = grades.some(
+    (g) => enrollments.some((e) => e.id === g.enrollmentId) &&
+    [g.p1, g.exercises, g.report].some(grade => grade !== null)
+  );
 
   return (
     <GenericModal
@@ -101,60 +186,7 @@ const StudentGradesModal: React.FC<StudentGradesModalProps> = ({
 
         {hasGrades ? (
           <>
-            <TableContainer component={Paper} sx={{ mb: 3 }}>
-              <Table size="small">
-                <TableHead sx={tableHeaderStyles}>
-                  <TableRow>
-                    <TableCell sx={tableCellBold}>Disciplina</TableCell>
-                    <TableCell sx={tableCellBold} align="center">P1 (50%)</TableCell>
-                    <TableCell sx={tableCellBold} align="center">Exercícios (30%)</TableCell>
-                    <TableCell sx={tableCellBold} align="center">Relatório (20%)</TableCell>
-                    <TableCell sx={tableCellBold} align="center">Média</TableCell>
-                    <TableCell sx={tableCellBold} align="center">Situação</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {grades
-                    .filter(grade => enrollments.some(e => e.id === grade.enrollmentId))
-                    .map((grade) => {
-                      const enrollment = enrollments.find(e => e.id === grade.enrollmentId);
-                      const discipline = enrollment ? getDisciplineInfo(enrollment.disciplinaId) : null;
-                      const average = grade.p1 !== null && grade.exercises !== null && grade.report !== null
-                        ? (grade.p1 * 0.5 + grade.exercises * 0.3 + grade.report * 0.2)
-                        : null;
-
-                      const situacao = average !== null
-                        ? average >= 5 ? 'Aprovado' : 'Reprovado'
-                        : enrollment?.status === 'ativo' ? 'Cursando' : 'Inativo';
-
-                      const corSituacao = average !== null
-                        ? average >= 5 ? 'success' : 'error'
-                        : enrollment?.status === 'ativo' ? 'primary' : 'default';
-
-                      return (
-                        <TableRow key={grade.id}>
-                          <TableCell>
-                            {discipline?.codigo} - {discipline?.name || 'Desconhecida'}
-                          </TableCell>
-                          <TableCell align="center">{grade.p1?.toFixed(1) || 'N/A'}</TableCell>
-                          <TableCell align="center">{grade.exercises?.toFixed(1) || 'N/A'}</TableCell>
-                          <TableCell align="center">{grade.report?.toFixed(1) || 'N/A'}</TableCell>
-                          <TableCell align="center">{average?.toFixed(1) || 'N/A'}</TableCell>
-                          <TableCell align="center">
-                            <Chip
-                              label={situacao}
-                              color={corSituacao}
-                              size="small"
-                              sx={chipStyles}
-                            />
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-
+            <GradesTable grades={grades} enrollments={enrollments} disciplines={disciplines} />
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button
                 variant="contained"

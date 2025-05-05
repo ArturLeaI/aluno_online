@@ -1,8 +1,28 @@
 import React, { useState } from 'react';
-import { Box, Button, Collapse, FormControl, InputLabel, MenuItem, Paper, Select } from '@mui/material';
-import { FilterList as FilterIcon, Close as CloseIcon, ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon } from '@mui/icons-material';
+import {
+  Box,
+  Button,
+  Collapse,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  SelectChangeEvent 
+} from '@mui/material';
+import {
+  FilterList as FilterIcon,
+  Close as CloseIcon,
+  ExpandMore as ExpandMoreIcon,
+  ExpandLess as ExpandLessIcon,
+} from '@mui/icons-material';
 import { StudentFiltersProps } from './studentFilters.type';
-import { buttonStyles, paperStyles, filterContainerStyles, formControlStyles } from './studentFilters.style';
+import {
+  buttonStyles,
+  paperStyles,
+  filterContainerStyles,
+  formControlStyles,
+} from './studentFilters.style';
 
 const StudentFilters: React.FC<StudentFiltersProps> = ({
   disciplines,
@@ -12,9 +32,15 @@ const StudentFilters: React.FC<StudentFiltersProps> = ({
   const [showFilters, setShowFilters] = useState(false);
   const [selectedDisciplineFilter, setSelectedDisciplineFilter] = useState('');
 
+  const toggleFilters = () => setShowFilters((prev) => !prev);
+
   const handleDisciplineFilterChange = (value: string) => {
     setSelectedDisciplineFilter(value);
     onFilterChange(value);
+  };
+
+  const handleSelectChange = (e: SelectChangeEvent<string>) => {
+    handleDisciplineFilterChange(e.target.value);
   };
 
   const handleResetFilters = () => {
@@ -22,14 +48,34 @@ const StudentFilters: React.FC<StudentFiltersProps> = ({
     onResetFilters();
   };
 
+  const renderDisciplineOptions = disciplines.map((discipline) => (
+    <MenuItem key={discipline.id} value={discipline.id}>
+      {discipline.name}
+    </MenuItem>
+  ));
+
+  const renderClearButton = selectedDisciplineFilter && (
+    <Button
+      variant="text"
+      color="inherit"
+      startIcon={<CloseIcon />}
+      onClick={handleResetFilters}
+      sx={buttonStyles}
+    >
+      Limpar filtros
+    </Button>
+  );
+
+  const filterButtonIcon = showFilters ? <ExpandLessIcon /> : <ExpandMoreIcon />;
+
   return (
     <>
       <Box sx={{ display: 'flex', gap: 1 }}>
         <Button
           variant="outlined"
-          startIcon={showFilters ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          startIcon={filterButtonIcon}
           endIcon={<FilterIcon />}
-          onClick={() => setShowFilters(!showFilters)}
+          onClick={toggleFilters}
           sx={buttonStyles}
         >
           Filtros
@@ -43,31 +89,17 @@ const StudentFilters: React.FC<StudentFiltersProps> = ({
               <InputLabel>Filtrar por matéria</InputLabel>
               <Select
                 value={selectedDisciplineFilter}
-                onChange={(e) => handleDisciplineFilterChange(e.target.value as string)}
+                onChange={handleSelectChange}
                 label="Filtrar por matéria"
               >
                 <MenuItem value="">
                   <em>Todas as matérias</em>
                 </MenuItem>
-                {disciplines.map(discipline => (
-                  <MenuItem key={discipline.id} value={discipline.id}>
-                    {discipline.name}
-                  </MenuItem>
-                ))}
+                {renderDisciplineOptions}
               </Select>
             </FormControl>
 
-            {selectedDisciplineFilter && (
-              <Button
-                variant="text"
-                color="inherit"
-                startIcon={<CloseIcon />}
-                onClick={handleResetFilters}
-                sx={buttonStyles}
-              >
-                Limpar filtros
-              </Button>
-            )}
+            {renderClearButton}
           </Box>
         </Paper>
       </Collapse>

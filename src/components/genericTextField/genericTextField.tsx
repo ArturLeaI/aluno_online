@@ -1,6 +1,7 @@
 import React from 'react';
 import { TextField } from '@mui/material';
 import { GenericTextFieldProps } from './genericTextField.type';
+import { styles } from './genericTextField.style';
 
 const GenericTextField: React.FC<GenericTextFieldProps> = ({
   label,
@@ -22,6 +23,16 @@ const GenericTextField: React.FC<GenericTextFieldProps> = ({
   inputProps = {},
   ...props
 }) => {
+  const mergedInputLabelProps = {
+    shrink: type === 'date' ? true : undefined,
+    ...InputLabelProps
+  };
+
+  const mergedSx = {
+    ...styles.root,
+    ...sx
+  };
+
   return (
     <TextField
       label={label}
@@ -33,25 +44,8 @@ const GenericTextField: React.FC<GenericTextFieldProps> = ({
       fullWidth={fullWidth}
       variant="outlined"
       size="small"
-      sx={{
-        backgroundColor: '#fff',
-        '& .MuiOutlinedInput-root': {
-          '& fieldset': {
-            borderColor: '#ccc',
-          },
-          '&:hover fieldset': {
-            borderColor: '#aaa',
-          },
-          '&.Mui-focused fieldset': {
-            borderColor: '#1976d2',
-          },
-        },
-        ...sx
-      }}
-      InputLabelProps={{
-        shrink: type === 'date' ? true : undefined,
-        ...InputLabelProps
-      }}
+      sx={mergedSx}
+      InputLabelProps={mergedInputLabelProps}
       error={error}
       helperText={helperText}
       disabled={disabled}

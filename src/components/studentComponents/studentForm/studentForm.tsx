@@ -1,23 +1,32 @@
-// src/pages/addStudent/components/StudentForm.tsx
 import React from 'react';
 import { Box, Typography, Button, Paper } from '@mui/material';
 import { FormField } from '../formField/formField';
 import { fieldGroups } from '../../../mock/fieldGroupsStudent';
-import { containerStyles, paperStyles, titleStyles, formStyles, fieldsContainerStyles, buttonContainerStyles, cancelButtonStyles, saveButtonStyles } from '../../../pages/addStudent/addStudent.style';
+import { StudentFormProps } from './studenForm.type';
+import { containerStyles, paperStyles, titleStyles, formStyles, fieldsContainerStyles, buttonContainerStyles, cancelButtonStyles, saveButtonStyles,} from '../../../pages/addStudent/addStudent.style';
 
-interface StudentFormProps {
-  control: any;
-  errors: any;
-  onSubmit: () => void;
-  onCancel: () => void;
-}
+const StudentForm: React.FC<StudentFormProps> = ({ control, errors, onSubmit, onCancel,}) => {
+  const renderFieldGroup = (group: typeof fieldGroups[number], groupIndex: number) => {
+    const direction = group.direction === 'row' ? 'row' : 'column';
 
-const StudentForm: React.FC<StudentFormProps> = ({
-  control,
-  errors,
-  onSubmit,
-  onCancel
-}) => {
+    const renderedFields = group.fields.map((field) => (
+      <FormField
+        key={field.name}
+        control={control}
+        errors={errors}
+        {...field}
+      />
+    ));
+
+    return (
+      <Box key={groupIndex} sx={{ display: 'flex', gap: 2, flexDirection: direction }}>
+        {renderedFields}
+      </Box>
+    );
+  };
+
+  const renderedGroups = fieldGroups.map(renderFieldGroup);
+
   return (
     <Box sx={containerStyles}>
       <Paper sx={paperStyles}>
@@ -27,25 +36,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
         <Box component="form" onSubmit={onSubmit} sx={formStyles}>
           <Box sx={fieldsContainerStyles}>
-            {fieldGroups.map((group, groupIndex) => (
-              <Box 
-                key={groupIndex}
-                sx={{ 
-                  display: 'flex',
-                  gap: 2,
-                  flexDirection: group.direction === 'row' ? 'row' : 'column'
-                }}
-              >
-                {group.fields.map((field) => (
-                  <FormField
-                    key={field.name}
-                    control={control}
-                    errors={errors}
-                    {...field}
-                  />
-                ))}
-              </Box>
-            ))}
+            {renderedGroups}
           </Box>
 
           <Box sx={buttonContainerStyles}>

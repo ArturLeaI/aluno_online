@@ -1,22 +1,13 @@
-// src/pages/addProfessor/components/ProfessorForm.tsx
 import React from 'react';
 import { Box, Typography, Button, Paper } from '@mui/material';
 import { FormField } from '../formFieldProfessor/formFieldProfessor';
 import { fieldGroups } from '../../../mock/fieldGroupsProfessor';
-import {
-  containerStyles,
-  paperStyles,
-  titleStyles,
-  formStyles,
-  fieldsContainerStyles,
-  buttonContainerStyles,
-  cancelButtonStyles,
-  saveButtonStyles
-} from '../../../pages/addProfessor/addProfessor.style';
+import { containerStyles, paperStyles, titleStyles, formStyles, fieldsContainerStyles, buttonContainerStyles, cancelButtonStyles, saveButtonStyles } from '../../../pages/addProfessor/addProfessor.style';
+import { Control, FieldValues, FieldErrors } from 'react-hook-form';
 
 interface ProfessorFormProps {
-  control: any;
-  errors: any;
+  control: Control<FieldValues>;
+  errors: FieldErrors<FieldValues>;
   onSubmit: () => void;
   onCancel: () => void;
 }

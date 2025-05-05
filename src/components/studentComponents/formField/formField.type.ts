@@ -1,13 +1,14 @@
 import { GenericSelectProps, SelectOption } from '../../genericSelect/genericSelect.type';
 import { GenericTextFieldProps } from '../../genericTextField/genericTextField.type';
+import { Control, FieldValues, FieldErrors, RegisterOptions } from 'react-hook-form';
 
 type BaseFieldProps = {
   name: string;
-  control: any;
-  errors: any;
+  control: Control<FieldValues>;
+  errors: FieldErrors<FieldValues>;
   label: string;
   fullWidth?: boolean;
-  rules?: any;
+  rules?: RegisterOptions; 
 };
 
 export type SelectField = BaseFieldProps & {
@@ -20,7 +21,7 @@ export type TextField = BaseFieldProps & {
   fieldType: 'text';
   textProps?: Omit<GenericTextFieldProps, 'label'>;
   type?: string;
-  InputLabelProps?: any;
+  InputLabelProps?: Record<string, any>;
 };
 
 export type FormFieldProps = SelectField | TextField;

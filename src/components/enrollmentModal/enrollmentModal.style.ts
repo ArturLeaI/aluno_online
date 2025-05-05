@@ -1,6 +1,23 @@
 // src/components/enrollmentModal/enrollmentModal.styles.ts
 import { SxProps, Theme } from '@mui/material';
 
+const getBorderColor = (theme: Theme, isSelected: boolean, isEnrolled: boolean) => {
+  if (isSelected) return theme.palette.primary.main;
+  if (isEnrolled) return theme.palette.success.light;
+  return theme.palette.divider;
+};
+
+const getBackgroundColor = (theme: Theme, isSelected: boolean, isEnrolled: boolean) => {
+  if (isSelected) return theme.palette.action.selected;
+  if (isEnrolled) return theme.palette.action.disabledBackground;
+  return theme.palette.background.paper;
+};
+
+const getHoverBackgroundColor = (theme: Theme, isEnrolled: boolean, readOnly: boolean) => {
+  if (isEnrolled || readOnly) return theme.palette.action.disabledBackground;
+  return theme.palette.action.hover;
+};
+
 export const styles = {
   modalContent: {
     maxHeight: 300,
@@ -10,26 +27,12 @@ export const styles = {
   disciplinePaper: (isSelected: boolean, isEnrolled: boolean, readOnly: boolean) => ({
     p: 2,
     mb: 1,
-    border: (theme: Theme) => `1px solid ${
-      isSelected 
-        ? theme.palette.primary.main 
-        : isEnrolled 
-          ? theme.palette.success.light 
-          : theme.palette.divider
-    }`,
+    border: (theme: Theme) => `1px solid ${getBorderColor(theme, isSelected, isEnrolled)}`,
     borderRadius: 1,
     cursor: isEnrolled || readOnly ? 'default' : 'pointer',
-    backgroundColor: (theme: Theme) => 
-      isSelected
-        ? theme.palette.action.selected
-        : isEnrolled
-          ? theme.palette.action.disabledBackground
-          : theme.palette.background.paper,
+    backgroundColor: (theme: Theme) => getBackgroundColor(theme, isSelected, isEnrolled),
     '&:hover': {
-      backgroundColor: (theme: Theme) => 
-        isEnrolled || readOnly 
-          ? theme.palette.action.disabledBackground 
-          : theme.palette.action.hover
+      backgroundColor: (theme: Theme) => getHoverBackgroundColor(theme, isEnrolled, readOnly)
     }
   }) as SxProps,
   disciplineHeader: {

@@ -1,6 +1,5 @@
-// src/pages/addStudent/components/FormField.tsx
 import React from 'react';
-import { FormFieldProps } from '../../../pages/addStudent/addStudent.type';
+import { FormFieldProps, StudentFormValues } from '../../../pages/addStudent/addStudent.type';
 import { selectOptions } from '../../../mock/selectOptionsStudent';
 import { Controller } from 'react-hook-form';
 
@@ -16,7 +15,7 @@ export const FormField: React.FC<FormFieldProps> = ({
   
   return (
     <Controller
-      name={name}
+      name={name as keyof StudentFormValues} 
       control={control}
       rules={props.rules}
       render={({ field }) => (

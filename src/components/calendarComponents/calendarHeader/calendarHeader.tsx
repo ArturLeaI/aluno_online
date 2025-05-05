@@ -8,23 +8,29 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
   isProfessor, 
   onAddEvent 
 }) => {
+  const renderAddEventButton = () => {
+    if (!isProfessor || !onAddEvent) return null;
+    
+    return (
+      <Button 
+        variant="contained" 
+        color="primary" 
+        startIcon={<Add />} 
+        onClick={onAddEvent}
+        sx={addButtonStyles}
+      >
+        Adicionar Evento
+      </Button>
+    );
+  };
+
   return (
     <Box sx={headerContainerStyles}>
       <Typography variant="h4" component="h1">
         Calendário Escolar
       </Typography>
       
-      {isProfessor && onAddEvent && (
-        <Button 
-          variant="contained" 
-          color="primary" 
-          startIcon={<Add />} 
-          onClick={onAddEvent}
-          sx={addButtonStyles}
-        >
-          Adicionar Evento
-        </Button>
-      )}
+      {renderAddEventButton()}
     </Box>
   );
 };

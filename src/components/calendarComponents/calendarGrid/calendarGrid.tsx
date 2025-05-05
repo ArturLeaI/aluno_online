@@ -64,19 +64,23 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
 
     const days = useMemo(() => generateDays(), [generateDays]);
 
+    const renderDayCells = () => {
+        return days.map((dayObj, index) => (
+            <Box key={`day-${index}`} sx={{ minHeight: 100 }}>
+                <DayCell
+                    dayObj={dayObj}
+                    getEventsForDay={getEventsForDay}
+                    getEventColor={getEventColor}
+                    isProfessor={isProfessor} 
+                    onDateClick={onDateClick}
+                />
+            </Box>
+        ));
+    };
+
     return (
         <Box display="grid" gridTemplateColumns="repeat(7, 1fr)" gap={1}>
-            {days.map((dayObj, index) => (
-                <Box key={`day-${index}`} sx={{ minHeight: 100 }}>
-                    <DayCell
-                        dayObj={dayObj}
-                        getEventsForDay={getEventsForDay}
-                        getEventColor={getEventColor}
-                        isProfessor={isProfessor} 
-                        onDateClick={onDateClick}
-                    />
-                </Box>
-            ))}
+            {renderDayCells()}
         </Box>
     );
 };

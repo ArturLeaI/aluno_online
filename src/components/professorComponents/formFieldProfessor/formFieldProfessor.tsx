@@ -4,13 +4,8 @@ import { FormFieldProps } from '../../../pages/addProfessor/addProfessor.type';
 import { selectOptions } from '../../../mock/selectOptionsProfessor';
 import { Controller } from 'react-hook-form';
 
-export const FormField: React.FC<FormFieldProps> = ({
-  name,
-  control,
-  errors,
-  component: Component,
-  options,
-  ...props
+export const FormField: React.FC<FormFieldProps> = ({name,control, errors, component: Component, options,
+ ...props
 }) => {
   const fieldOptions = options ? selectOptions[options] : undefined;
   

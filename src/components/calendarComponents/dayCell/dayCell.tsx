@@ -27,6 +27,48 @@ export const DayCell: React.FC<DayCellProps> = ({
         onDateClick(dayObj.date); 
     };
 
+    const renderDayNumber = () => (
+        <Typography variant="body2" sx={dayNumberStyles(isToday, dayObj.currentMonth)}>
+            {dayObj.day}
+        </Typography>
+    );
+
+    const renderEventIndicator = () => {
+        if (dayEvents.length === 0) return null;
+        return (
+            <Notifications 
+                fontSize="small" 
+                sx={{ color: getEventColor(dayEvents[0].type), marginLeft: 1 }} 
+            />
+        );
+    };
+
+    const renderEventItems = () => (
+        dayEvents.slice(0, 2).map((event) => (
+            <Box key={event.id} sx={eventItemStyles(getEventColor(event.type))}>
+                {event.title}
+            </Box>
+        ))
+    );
+
+    const renderAdditionalEventsBadge = () => {
+        if (dayEvents.length <= 2) return null;
+        return (
+            <Badge 
+                badgeContent={`+${dayEvents.length - 2}`} 
+                color="primary" 
+                sx={badgeStyles} 
+            />
+        );
+    };
+
+    const renderEvents = () => (
+        <Box sx={eventsBoxStyles}>
+            {renderEventItems()}
+            {renderAdditionalEventsBadge()}
+        </Box>
+    );
+
     return (
         <Paper
             elevation={isToday ? 3 : 0}
@@ -34,24 +76,10 @@ export const DayCell: React.FC<DayCellProps> = ({
             onClick={handleClick}
         >
             <Box sx={headerBoxStyles}>
-                <Typography variant="body2" sx={dayNumberStyles(isToday, dayObj.currentMonth)}>
-                    {dayObj.day}
-                </Typography>
-                {dayEvents.length > 0 && (
-                    <Notifications fontSize="small" sx={{ color: getEventColor(dayEvents[0].type), marginLeft: 1 }} />
-                )}
+                {renderDayNumber()}
+                {renderEventIndicator()}
             </Box>
-
-            <Box sx={eventsBoxStyles}>
-                {dayEvents.slice(0, 2).map((event) => (
-                    <Box key={event.id} sx={eventItemStyles(getEventColor(event.type))}>
-                        {event.title}
-                    </Box>
-                ))}
-                {dayEvents.length > 2 && (
-                    <Badge badgeContent={`+${dayEvents.length - 2}`} color="primary" sx={badgeStyles} />
-                )}
-            </Box>
+            {renderEvents()}
         </Paper>
     );
 };

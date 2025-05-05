@@ -5,14 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { GenericModalProps } from './genericModal.type';
 import { modalBoxStyle, headerStyle, contentStyle } from './genericModal.style';
 
-const GenericModal: React.FC<GenericModalProps> = ({ 
-  open, 
-  onClose, 
-  title, 
-  children,
-  width = { xs: '90%', sm: '80%', md: '700px' },
-  maxWidth
-}) => {
+const GenericModal: React.FC<GenericModalProps> = ({ open, onClose, title, children,width = { xs: '90%', sm: '80%', md: '700px' },maxWidth}) => {
   return (
     <Modal
       open={open}

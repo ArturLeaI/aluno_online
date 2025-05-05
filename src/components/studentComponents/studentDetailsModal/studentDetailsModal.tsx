@@ -3,57 +3,64 @@ import { Box, Button, Divider, Paper, Tab, Tabs, Table, TableBody, TableCell, Ta
 import { Add as AddIcon } from '@mui/icons-material';
 import DetailItem from '../../detailItem/detailItem';
 import GenericModal from '../../genericModal/genericModal';
-import { StudentDetailsModalProps, Discipline } from './studentDetailsModal.type';
+import { StudentDetailsModalProps } from './studentDetailsModal.type';
 import { personalInfoBoxStyle, sectionTitleStyle, tableContainerStyle, tableRowHeaderStyle, chipStyle } from './studentDetailsModal.style';
 
-const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({open,student, enrollments, disciplines, onClose, onEnroll,isProfessor = false}) => {
+type ChipColor = 'success' | 'primary' | 'default';
+type StatusProps = { label: string; color: ChipColor };
+
+const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({
+  open, student, enrollments = [], disciplines = [], onClose, onEnroll, isProfessor = false
+}) => {
   const [selectedTab, setSelectedTab] = useState(0);
-
-  const getDisciplineInfo = (id: string): Discipline => {
-    return (
-      disciplines.find(d => d.id === id) || 
-      { id: 'N/A', name: 'Desconhecida', codigo: 'N/A' }
-    );
-  };
-
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setSelectedTab(newValue);
-  };
 
   if (!student) return null;
 
+  const getDiscipline = (id: string) => 
+    disciplines.find(d => d.id === id) || { id: 'N/A', name: 'Desconhecida', codigo: 'N/A' };
+
+  const getStatusProps = (status: string): StatusProps => {
+    const statusMap: Record<string, StatusProps> = {
+      'concluído': { label: 'Aprovado', color: 'success' },
+      'ativo': { label: 'Cursando', color: 'primary' }
+    };
+    return statusMap[status] || { label: 'Inativo', color: 'default' };
+  };
+
+  const personalInfoItems = [
+    { label: 'Nome Completo', value: student.nomeCompleto },
+    { label: 'Data de Nascimento', value: student.dataNascimento },
+    { label: 'Sexo', value: student.sexo || 'Não informado' },
+    { label: 'Estado Civil', value: student.estadoCivil || 'Não informado' }
+  ];
+
+  const additionalInfoItems = [
+    { label: 'CPF', value: student.cpf || 'Não informado' },
+    { label: 'Contato', value: student.contato || 'Não informado' },
+    { label: 'Nacionalidade', value: student.nacionalidade || 'Não informado' }
+  ];
+
+  const renderDetailItems = (items: Array<{label: string, value: string}>) => 
+    items.map((item, i) => <DetailItem key={i} {...item} />);
+
   return (
-    <GenericModal
-      open={open}
-      onClose={onClose}
-      title={`Detalhes do Aluno - ${student.nomeCompleto}`}
-      maxWidth="md"
-    >
-      <Tabs value={selectedTab} onChange={handleTabChange} sx={{ mb: 3 }}>
-        <Tab label="Informações Pessoais" />
-        <Tab label="Matrículas" />
+    <GenericModal open={open} onClose={onClose} title={`Detalhes do Aluno - ${student.nomeCompleto}`} maxWidth="md">
+      <Tabs value={selectedTab} onChange={(_, v) => setSelectedTab(v)} sx={{ mb: 3 }}>
+        {['Informações Pessoais', 'Matrículas'].map((label, i) => 
+          <Tab key={i} label={label} />
+        )}
       </Tabs>
 
       {selectedTab === 0 && (
         <>
           <Box sx={personalInfoBoxStyle}>
             <Box>
-              <Typography variant="subtitle1" sx={sectionTitleStyle}>
-                Dados Pessoais
-              </Typography>
-              <DetailItem label="Nome Completo" value={student.nomeCompleto} />
-              <DetailItem label="Data de Nascimento" value={student.dataNascimento} />
-              <DetailItem label="Sexo" value={student.sexo || 'Não informado'} />
-              <DetailItem label="Estado Civil" value={student.estadoCivil || 'Não informado'} />
+              <Typography variant="subtitle1" sx={sectionTitleStyle}>Dados Pessoais</Typography>
+              {renderDetailItems(personalInfoItems)}
             </Box>
-
             <Box>
-              <Typography variant="subtitle1" sx={sectionTitleStyle}>
-                Informações Adicionais
-              </Typography>
-              <DetailItem label="CPF" value={student.cpf || 'Não informado'} />
-              <DetailItem label="Contato" value={student.contato || 'Não informado'} />
-              <DetailItem label="Nacionalidade" value={student.nacionalidade || 'Não informado'} />
+              <Typography variant="subtitle1" sx={sectionTitleStyle}>Informações Adicionais</Typography>
+              {renderDetailItems(additionalInfoItems)}
             </Box>
           </Box>
           <Divider sx={{ my: 2 }} />
@@ -63,17 +70,9 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({open,student, 
       {selectedTab === 1 && (
         <Box sx={tableContainerStyle}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-              Histórico de Matrículas
-            </Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Histórico de Matrículas</Typography>
             {isProfessor && (
-              <Button
-                variant="outlined"
-                size="small"
-                startIcon={<AddIcon />}
-                onClick={onEnroll}
-                sx={{ textTransform: 'none' }}
-              >
+              <Button variant="outlined" size="small" startIcon={<AddIcon />} onClick={onEnroll} sx={{ textTransform: 'none' }}>
                 Nova Matrícula
               </Button>
             )}
@@ -84,35 +83,26 @@ const StudentDetailsModal: React.FC<StudentDetailsModalProps> = ({open,student, 
               <Table size="small">
                 <TableHead sx={tableRowHeaderStyle}>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Período</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Disciplina</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }} align="center">CH</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }} align="center">Média</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }} align="center">Situação</TableCell>
+                    {['Período', 'Disciplina', 'CH', 'Média', 'Situação'].map((header, i) => 
+                      <TableCell key={i} sx={{ fontWeight: 'bold' }} align={i > 1 ? 'center' : 'left'}>
+                        {header}
+                      </TableCell>
+                    )}
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {enrollments.map((enrollment) => {
-                    const discipline = getDisciplineInfo(enrollment.disciplinaId);
+                  {enrollments.map(enrollment => {
+                    const { label, color } = getStatusProps(enrollment.status);
+                    const discipline = getDiscipline(enrollment.disciplinaId);
+                    
                     return (
                       <TableRow key={enrollment.id}>
                         <TableCell>{enrollment.periodo || '---'}</TableCell>
-                        <TableCell>
-                          {discipline.codigo} - {discipline.name}
-                        </TableCell>
+                        <TableCell>{discipline.codigo} - {discipline.name}</TableCell>
                         <TableCell align="center">80</TableCell>
+                        <TableCell align="center">{enrollment.status === 'concluído' ? 'MM' : '---'}</TableCell>
                         <TableCell align="center">
-                          {enrollment.status === 'concluído' ? 'MM' : '---'}
-                        </TableCell>
-                        <TableCell align="center">
-                          <Chip
-                            label={enrollment.status === 'concluído' ? 'Aprovado' :
-                              enrollment.status === 'ativo' ? 'Cursando' : 'Inativo'}
-                            color={enrollment.status === 'concluído' ? 'success' :
-                              enrollment.status === 'ativo' ? 'primary' : 'default'}
-                            size="small"
-                            sx={chipStyle}
-                          />
+                          <Chip label={label} color={color} size="small" sx={chipStyle} />
                         </TableCell>
                       </TableRow>
                     );

@@ -1,4 +1,3 @@
-// appDrawer.types.ts
 import { ReactNode } from 'react';
 
 export type UserRole = 'aluno' | 'professor';
