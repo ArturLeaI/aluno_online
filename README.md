@@ -20,17 +20,6 @@
 
 ---
 
-## 📑 Sumário
-
-- [📖 Visão Geral](#visão-geral)
-- [⚙️ Primeiros Passos](#primeiros-passos)
-  - [🔧 Pré-requisitos](#pré-requisitos)
-  - [📦 Instalação](#instalação)
-  - [▶️ Uso](#uso)
-  - [🧪 Testes](#testes)
-
----
-
 ## 📖 Visão Geral
 
 **Aluno Online** é uma ferramenta de gestão educacional projetada para facilitar a administração de dados estudantis e otimizar os processos institucionais.
